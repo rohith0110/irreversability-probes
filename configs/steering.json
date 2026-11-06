@@ -1,0 +1,16 @@
+{
+  "strengths": [
+    0,
+    -8,
+    -6,
+    -4,
+    -2,
+    2,
+    4,
+    6,
+    8
+  ],
+  "unit": "multiples of the direction (mean irreversible minus mean reversible last-token state at the selected layer); 1.0 adds the direction once",
+  "calibration": "Modal A10 smoke 6 Nov 2026, Qwen2.5-7B, layer 20, direction norm 7.09, 4 tasks x 2 versions: |strength| 16 and 32 gave 100% parse failures for both the probe and the random direction; |strength| 8 gave 4/28 and 9/120 parse failures; |strength| 4 gave 4/25 and 1/106. Largest strength kept: 8.",
+  "status": "SUPERSEDED: strengths are now calibrated inside each run (irrev.agent.calibrate); this file records the first Modal smoke only"
+}

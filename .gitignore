@@ -1,0 +1,37 @@
+# environments and caches
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# agent-only state (never committed)
+.claude/
+.agents/
+.agent/
+.codex/
+.remember/
+
+# large or regenerable artefacts
+results/**/hidden/*.npy
+results/**/checkpoint.json
+logs/
+
+*.tmp
+
+# dry runs and Modal development output
+results/dryrun_*/
+results/modal/
+
+# ByteSized32 (no licence published): research use only, never committed or released
+data/external/
+data/rq5/
+upload/
+
+# course material and the private execution plan (not part of the code release)
+ADNN_Project_Option_1_Irreversibility.docx
+ADNN Irreversibility Project Execution Plan and Agent Handoff.md
+
+# secrets and editor state
+.env
+.vscode/
+.idea/
