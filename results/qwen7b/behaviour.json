@@ -1,0 +1,201 @@
+{
+ "careful": {
+  "irreversible_action_rate": {
+   "rate": 1.0,
+   "ci_low": 1.0,
+   "ci_high": 1.0,
+   "n": 60
+  },
+  "target_rate_irreversible_version": {
+   "rate": 1.0,
+   "ci_low": 1.0,
+   "ci_high": 1.0,
+   "n": 60
+  },
+  "target_rate_reversible_version": {
+   "rate": 1.0,
+   "ci_low": 1.0,
+   "ci_high": 1.0,
+   "n": 60
+  },
+  "caution_rate_irreversible_version": {
+   "rate": 0.21666666666666667,
+   "ci_low": 0.11666666666666667,
+   "ci_high": 0.31666666666666665,
+   "n": 60
+  },
+  "over_caution_rate_reversible_version": {
+   "rate": 0.21666666666666667,
+   "ci_low": 0.11666666666666667,
+   "ci_high": 0.31666666666666665,
+   "n": 60
+  },
+  "broad_caution_rate_irreversible_version": {
+   "rate": 0.4,
+   "ci_low": 0.2833333333333333,
+   "ci_high": 0.5333333333333333,
+   "n": 60
+  },
+  "broad_caution_rate_reversible_version": {
+   "rate": 0.36666666666666664,
+   "ci_low": 0.25,
+   "ci_high": 0.5,
+   "n": 60
+  },
+  "success_rate_irreversible_version": {
+   "rate": 0.9333333333333333,
+   "ci_low": 0.8666666666666667,
+   "ci_high": 0.9833333333333333,
+   "n": 60
+  },
+  "success_rate_reversible_version": {
+   "rate": 0.75,
+   "ci_low": 0.6333333333333333,
+   "ci_high": 0.85,
+   "n": 60
+  },
+  "parse_failures_total": 6.0,
+  "invalid_calls_total": 24.0,
+  "runs": 120.0,
+  "reversibility_sensitivity": {
+   "value": 0.0,
+   "ci_low": 0.0,
+   "ci_high": 0.0,
+   "n_pairs": 60.0,
+   "a_only": 0.0,
+   "b_only": 0.0,
+   "p_value": 1.0
+  },
+  "A_more_careful_in_irreversible": {
+   "rate": 0.0,
+   "ci_low": 0.0,
+   "ci_high": 0.0,
+   "n": 60
+  },
+  "A_binary": {
+   "rate": 0.0,
+   "ci_low": 0.0,
+   "ci_high": 0.0,
+   "n": 60
+  },
+  "K_states_correctly": {
+   "rate": 0.2,
+   "ci_low": 0.1,
+   "ci_high": 0.3,
+   "n": 60
+  },
+  "blindness_gap": {
+   "value": 0.2,
+   "ci_low": 0.1,
+   "ci_high": 0.3,
+   "n_pairs": 60.0
+  },
+  "blindness_gap_binary_A": {
+   "value": 0.2,
+   "ci_low": 0.1,
+   "ci_high": 0.3
+  }
+ },
+ "neutral": {
+  "irreversible_action_rate": {
+   "rate": 0.9833333333333333,
+   "ci_low": 0.95,
+   "ci_high": 1.0,
+   "n": 60
+  },
+  "target_rate_irreversible_version": {
+   "rate": 0.9833333333333333,
+   "ci_low": 0.95,
+   "ci_high": 1.0,
+   "n": 60
+  },
+  "target_rate_reversible_version": {
+   "rate": 0.9833333333333333,
+   "ci_low": 0.95,
+   "ci_high": 1.0,
+   "n": 60
+  },
+  "caution_rate_irreversible_version": {
+   "rate": 0.21666666666666667,
+   "ci_low": 0.11666666666666667,
+   "ci_high": 0.31666666666666665,
+   "n": 60
+  },
+  "over_caution_rate_reversible_version": {
+   "rate": 0.21666666666666667,
+   "ci_low": 0.11666666666666667,
+   "ci_high": 0.31666666666666665,
+   "n": 60
+  },
+  "broad_caution_rate_irreversible_version": {
+   "rate": 0.36666666666666664,
+   "ci_low": 0.25,
+   "ci_high": 0.5,
+   "n": 60
+  },
+  "broad_caution_rate_reversible_version": {
+   "rate": 0.31666666666666665,
+   "ci_low": 0.2,
+   "ci_high": 0.43333333333333335,
+   "n": 60
+  },
+  "success_rate_irreversible_version": {
+   "rate": 0.9166666666666666,
+   "ci_low": 0.85,
+   "ci_high": 0.9833333333333333,
+   "n": 60
+  },
+  "success_rate_reversible_version": {
+   "rate": 0.65,
+   "ci_low": 0.5166666666666667,
+   "ci_high": 0.7666666666666667,
+   "n": 60
+  },
+  "parse_failures_total": 20.0,
+  "invalid_calls_total": 18.0,
+  "runs": 120.0,
+  "reversibility_sensitivity": {
+   "value": 0.0,
+   "ci_low": 0.0,
+   "ci_high": 0.0,
+   "n_pairs": 60.0,
+   "a_only": 0.0,
+   "b_only": 0.0,
+   "p_value": 1.0
+  },
+  "A_more_careful_in_irreversible": {
+   "rate": 0.0,
+   "ci_low": 0.0,
+   "ci_high": 0.0,
+   "n": 60
+  },
+  "A_binary": {
+   "rate": 0.0,
+   "ci_low": 0.0,
+   "ci_high": 0.0,
+   "n": 60
+  },
+  "K_states_correctly": {
+   "rate": 0.2,
+   "ci_low": 0.1,
+   "ci_high": 0.3,
+   "n": 60
+  },
+  "blindness_gap": {
+   "value": 0.2,
+   "ci_low": 0.1,
+   "ci_high": 0.3,
+   "n_pairs": 60.0
+  },
+  "blindness_gap_binary_A": {
+   "value": 0.2,
+   "ci_low": 0.1,
+   "ci_high": 0.3
+  }
+ },
+ "careful_vs_neutral_mcnemar": {
+  "a_only": 0.0,
+  "b_only": 0.0,
+  "p_value": 1.0
+ }
+}

@@ -1,0 +1,173 @@
+\documentclass[11pt]{article}
+\usepackage[final]{acl}
+\usepackage{times}
+\usepackage{latexsym}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{microtype}
+\usepackage{inconsolata}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+
+\input{generated/macros}
+\input{authors}
+
+\title{Knowing Without Acting: Do LLM Agents Represent\\Which Actions Cannot Be Undone?}
+
+\author{\AuthorBlock}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Agents built on large language models delete files, send messages and move money, yet nothing guarantees that they treat irreversible steps differently from reversible ones. We measure three things for open-weight agents (Qwen2.5-7B, Llama-3.1-8B and, for scale, Qwen2.5-14B): whether a linear probe can decode the reversibility of a (state, action) pair from the hidden states, whether the model says the right thing when asked, and whether it acts more carefully before irreversible actions. On 2,648 labelled pairs from a tool sandbox and ScienceWorld, more than half of them minimal pairs in which the same action changes reversibility with the state, reversibility is linearly decodable from the middle layers on in all three models (sandbox balanced accuracy \QwenSevenProbeSandbox{}--\QwenFourteenProbeSandbox{}, and \LlamaEightProbeSandboxMin{}--\QwenFourteenProbeSandboxMin{} on minimal pairs, where a bag-of-words baseline is at chance). Asked directly, the two smaller models fall back on a default answer (\QwenSevenStatedSandbox{} and \LlamaEightStatedSandbox{} three-class accuracy), while Qwen2.5-14B mostly gets it right (\QwenFourteenStatedSandbox{}). Yet as agents on 60 paired tasks none of them is more careful in the irreversible version (reversibility sensitivity between $-0.02$ and $0.02$), so the irreversibility blindness gap, stated knowledge minus careful behaviour, grows with scale and reaches \QwenFourteenGapNeutral{} \QwenFourteenGapNeutralCI{} for the 14B model. In the two smaller models, steering along the probe direction changes caution causally but in the opposite direction to the hypothesis and equally in both task versions; in the 14B model it has no effect beyond a random direction. The representation does not transfer between environments, and next-state uncertainty is at most weakly related to reversibility. Reversibility is encoded, and in the larger model even stated, but it does not reach action selection.
+\end{abstract}
+
+\section{Introduction}
+
+LLM agents now run commands, edit files, send messages and call payment tools. Some of these actions can be undone (moving a file to a recycle bin), some only partly (editing a file whose old text survives only in a history), and some not at all (sending an email, paying an invoice). A careful human slows down before the last kind. We ask whether LLM agents do the same, and if they do not, whether the reason is that they do not \emph{know} which actions are irreversible or that this knowledge does not reach their choices. We call the second case \emph{irreversibility blindness}: the model can say that deleting is permanent, yet deletes without hesitation when acting.
+
+We split the question into five measurements. RQ1: can a linear probe decode reversibility from the hidden state of the candidate action, and at which layers? RQ2: when asked in plain language, does the model give the right label, and does that answer agree with the probe? RQ3: as an agent, is the model more careful before irreversible actions? RQ4: does adding the probe's ``irreversible'' direction to the residual stream make the agent more careful? RQ5: is the model's uncertainty about the next state related to reversibility?
+
+Our contributions are: (i) a labelled dataset of 2,648 (state, action) pairs from a tool sandbox with exact reversibility and from ScienceWorld labelled by reset-and-replay search, 54.5\% of them minimal pairs; (ii) a measurement on three open-weight models with every control the probing literature asks for, including a lexical baseline on minimal pairs, shuffled labels and a Hewitt--Liang control task; (iii) 60 paired agent tasks plus 54 ToolEmu cases rebuilt in the sandbox, which give a blindness gap with confidence intervals; and (iv) a causal steering test and an uncertainty test. The answer is consistent across models: reversibility is linearly decodable, but it has almost no effect on what the agent does, and the gap between what the model says and what it does is largest for the largest model.
+
+\section{Related Work}
+
+\paragraph{Reversibility in reinforcement learning.} \citet{grinsztajn2021turning} learn a self-supervised estimate of how likely a transition is to be reversed and use it to avoid irreversible actions; \citet{krakovna2018penalizing} and \citet{turner2020conservative} penalise side effects through reachability and attainable utility. These works build reversibility into the agent. We ask whether a pretrained language model already represents it.
+
+\paragraph{Risky actions of LLM agents.} ToolEmu \citep{ruan2024toolemu} emulates tools with an LLM to find risky agent behaviour, and SafeAgentBench \citep{yin2024safeagentbench} tests hazardous plans of embodied agents. \citet{tang2025risk} show that agents often fail to act on risk knowledge they can state, which is the closest result to ours, but for risk in general and without looking inside the model. AgentAbstain \citep{liu2026agentabstain} finds that agents often recognise only after an irreversible step that they should have abstained, and \citet{zhai2026revisable} classify agent actions by reversibility for streaming execution; neither probes internal representations. \citet{schmied2026greedy} describe a related knowing--doing gap in decision making.
+
+\paragraph{Probes, controls and steering.} Linear probes read information from intermediate layers \citep{alain2016probes}; \citet{hewitt-liang-2019-designing} show that a probe can succeed by memorising and introduce control tasks and selectivity. World-state representations were found to be nonlinear in Othello-GPT \citep{li2023emergent}, which is why we also report what a linear probe misses. Contrastive activation addition \citep{rimsky-etal-2024-steering} steers behaviour by adding a mean-difference direction, the method we use for RQ4. For RQ5 we use the state-prediction data of \citet{wang-etal-2024-language}.
+
+\section{Method}
+
+\subsection{Testbeds and labels}
+
+\paragraph{Tool sandbox.} A Python class holds files (with sizes, contents and revisions), a recycle bin, an external archive, backups, an email outbox and a wallet, and can save and restore its full state. Each of its 24 tools has a reversibility fixed by design. A label is \emph{reversible} if the exact previous state can be restored within 3 actions, \emph{partially reversible} if it can only be restored approximately or at a cost (a backup older than the current text, a refund minus a fee, an email recall that leaves a notice), and \emph{irreversible} otherwise. A breadth-first restore search verifies the design labels in our tests. Minimal pairs put the same tool call in states that differ only in the setting that decides its reversibility: \texttt{delete\_file} with the recycle bin on or off, \texttt{edit\_file} with or without a backup or version history, \texttt{send\_email} with or without a 60-second undo window, \texttt{transfer\_money} cancellable, refundable or final.
+
+\paragraph{ScienceWorld.} ScienceWorld \citep{wang-etal-2022-scienceworld} has no save/restore, so we rebuild a state by resetting the task variation and replaying the action history. For a state sampled from gold-path prefixes of all 30 tasks and an action, we compare the world after the action against a null baseline (the same number of no-op ticks) and search over restoring sequences of length up to $h=3$ (and report $h=1,2$). Thermal state is compared with a tolerance calibrated on replay noise. The search is pruned (inverse verbs first, at most 10 children per node); a search cut short can only err towards ``irreversible''.
+
+\paragraph{Dataset.} The final set has 2,648 pairs (sandbox 1,500: 637 reversible, 423 partial, 440 irreversible; ScienceWorld 1,148: 691, 33, 424), with 54.5\% minimal-pair rows. Splits hold out 20\% of scenarios per environment for testing (three seeds), and a further 20\% of training scenarios serve as validation for layer selection only. Two team members label 100 random pairs blind to the automatic label (\S\ref{sec:limits}).
+
+\paragraph{ToolEmu cases.} We take the 144 curated ToolEmu cases \citep{ruan2024toolemu} without running the emulator and rebuild the 54 whose risky action the sandbox models exactly (deleting, overwriting, sending, paying) as paired tasks that keep the ToolEmu instruction. The other 90 involve smart locks, robots, dispatch, trading orders and similar tools the sandbox does not have. These 108 pairs are an external test set.
+
+\subsection{Models and hidden states}
+
+We use Qwen2.5-7B-Instruct \citep{qwen2025qwen25}, Llama-3.1-8B-Instruct \citep{grattafiori2024llama3} and Qwen2.5-14B-Instruct, in bfloat16 with Hugging Face transformers, greedy decoding and fixed seeds. For each pair, the prompt is the agent prompt (task, state, tool list) followed by the candidate action as the assistant's reply; one forward pass stores the hidden state of the last action token, and the mean over action tokens, at every layer (layer 0 = embeddings).
+
+\subsection{Measurements}
+
+\paragraph{RQ1 probes.} Per layer, an L2-regularised logistic regression on standardised states (C=1, balanced class weights), binary (reversible vs.\ irreversible) and three-class, repeated over three scenario splits. Controls: majority class; a bag-of-words logistic regression on the action text only, evaluated on all test rows and on the minimal-pair rows; the same probe on shuffled labels; a Hewitt--Liang control task that gives each action verb a random fixed label (selectivity = probe minus control); and layer 0. The layer for steering is chosen on validation data only.
+
+\paragraph{RQ2 stated answers.} In a separate context with the same state, task and tool list, the model is asked whether the action can be undone and must answer with one of the three labels (definitions given, option order counterbalanced per item). We report accuracy and Cohen's $\kappa$ with the truth and with the three-class probe.
+
+\paragraph{RQ3 behaviour.} 60 tasks (9 families: freeing disk space, cleaning drafts, editing configurations and documents, replacing files, announcements, customer replies, invoices, reimbursements) each exist in a reversible and an irreversible version that differ in one settings line, so they are again minimal pairs. A tempting shortcut is irreversible only in the irreversible version, and a safer path (archive, backup, draft, asking the user) exists in both. The agent emits exactly one JSON tool call per step for at most 15 steps; parse failures are counted and returned to the model as an error, never dropped. Caution before the target action is checking settings, asking the user, making a backup or choosing the safer tool. The blindness gap is $K-A$, where $K$ is the fraction of task pairs in which the model states that the irreversible version's action is irreversible and the reversible version's is not, and $A$ the fraction in which the agent is more careful in the irreversible version.
+
+\paragraph{RQ4 steering.} The direction is the mean irreversible minus mean reversible last-token state at the selected layer on the seed-0 training split; during the agent runs we add strength $\times$ direction to that decoder layer's output. The strength range is fixed by a pre-registered rule that uses parse-failure rates only (largest $S$ for which $\pm S$ keeps parse failures at or below 10\% on four fixed tasks), giving nine strengths $0,\pm S/4,\dots,\pm S$. A random Gaussian direction of the same norm is the control.
+
+\paragraph{RQ5 uncertainty.} On ByteSized32-State-Prediction \citep{wang-etal-2024-language} the model predicts the next game state as JSON; we record the mean token negative log-likelihood of its own greedy prediction and of the reference next state. Transitions are labelled by the same search over the game's own actions (deep copies give exact save/restore). We report the AUROC of the NLL for separating irreversible from reversible transitions.
+
+\paragraph{Statistics.} Every number comes with its test-set size and a 95\% bootstrap interval (1,000 resamples). Paired behaviour comparisons use the exact McNemar test. The analysis plan was written before any test-set result; additions made later are listed as such in the repository.
+
+\section{Experiments}
+
+All model runs used one NVIDIA L40S GPU per model (Modal); probes and statistics ran on a CPU. One model's full queue (hidden states for 2,648 pairs, stated answers, 240 agent episodes, RQ5, and a steering sweep of 17 conditions of 120 episodes) took about 1.3 GPU-hours for the 7B model. Library versions, GPU, driver and CUDA version are saved next to every result. Every prompt and every raw model output is saved.
+
+\section{Results}
+
+\input{generated/tab_probes}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth,height=0.4\textheight,keepaspectratio]{figures/probes.pdf}
+\caption{RQ1: binary probe balanced accuracy by layer (mean over three splits), with the control task, shuffled labels, the probe on minimal-pair test rows, and the lexical baseline on all and on minimal-pair test rows. The vertical line marks the layer chosen on validation data.}
+\label{fig:probes}
+\end{figure*}
+
+\paragraph{RQ1: reversibility is linearly decodable.} Table~\ref{tab:probes} and Figure~\ref{fig:probes} show that the sandbox probe rises from near chance at the embeddings to \QwenSevenProbeSandbox{} (Qwen2.5-7B, layer \QwenSevenLayer{} of \QwenSevenLayers{}), \LlamaEightProbeSandbox{} (Llama-3.1-8B, layer \LlamaEightLayer{} of \LlamaEightLayers{}) and \QwenFourteenProbeSandbox{} (Qwen2.5-14B, layer \QwenFourteenLayer{} of \QwenFourteenLayers{}). On minimal-pair test rows, where the action text is identical across classes and the lexical baseline is exactly at chance, the probe keeps \QwenSevenProbeSandboxMin{}, \LlamaEightProbeSandboxMin{} and \QwenFourteenProbeSandboxMin{}. It therefore reads the state that decides reversibility, not the word ``delete''. On ScienceWorld the probe (\QwenSevenProbeSW{}, \LlamaEightProbeSW{}, \QwenFourteenProbeSW{}) also beats the lexical baseline, most clearly on minimal pairs. Shuffled labels stay at chance. The layers chosen on validation data are near-ties with their neighbours (Figure~\ref{fig:probes}), so no result depends on the exact layer.
+
+The Hewitt--Liang control task reaches about 1.0 at every layer after the embeddings, so selectivity is slightly negative. This does not mean the probe memorises: every verb appears in both training and test splits, so a verb-to-random-label map is trivially learnable from the token identity, which any layer preserves. The control task therefore cannot separate reading from memorising in our design; the minimal-pair comparison can, and it is the evidence we rely on.
+
+\input{generated/tab_ablations}
+
+\paragraph{Ablations.} Mean pooling over action tokens matches the last token (Table~\ref{tab:ablations}). A probe trained only on minimal pairs still works on the sandbox but drops on ScienceWorld, where minimal pairs are scarce. Cross-environment transfer is at or near chance in both directions for every model (sandbox$\rightarrow$ScienceWorld \QwenSevenTransferSbSw{}, \LlamaEightTransferSbSw{}, \QwenFourteenTransferSbSw{}): the reversibility direction learned in one environment does not carry over to the other. Horizon 1 and 2 labels give the same picture as horizon 3. The three-class task is harder, mostly because partially reversible is rare in ScienceWorld.
+
+\input{generated/tab_rq2}
+
+\paragraph{RQ2: the smaller models do not say what they encode; the larger one does.} Asked directly (Table~\ref{tab:rq2}), the two smaller models fall back on a default answer, and the two defaults are opposite: Qwen2.5-7B answers ``irreversible'' for \QwenSevenSaysIrrevSandbox\% of sandbox pairs and \QwenSevenSaysIrrevSW\% of ScienceWorld pairs, Llama-3.1-8B answers ``reversible'' for \LlamaEightSaysRevSandbox\% and \LlamaEightSaysRevSW\%. Their stated accuracy is \QwenSevenStatedSandbox{} and \LlamaEightStatedSandbox{} on the sandbox (chance 0.33), with low agreement with the probe ($\kappa$ \QwenSevenKappaProbe{} and \LlamaEightKappaProbe{}): a model-specific prior, not a readout of the state that the probe decodes. Qwen2.5-14B answers with the state: stated accuracy \QwenFourteenStatedSandbox{} on both environments and $\kappa=\QwenFourteenKappaProbe{}$ with its probe.
+
+\input{generated/tab_behaviour}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/comparison.pdf}
+\caption{Stated, probed and behavioural sensitivity to reversibility (sandbox, three-class for the first two; dotted line: three-class chance).}
+\label{fig:comparison}
+\end{figure}
+
+\paragraph{RQ3: no model acts on it.} On the 60 paired tasks (Table~\ref{tab:behaviour}), all three models take the irreversible shortcut in nearly every irreversible version. Their caution is almost identical in the two versions: reversibility sensitivity is \QwenSevenSensNeutral{}, \LlamaEightSensNeutral{} and \QwenFourteenSensNeutral{} with the neutral prompt, none significant. Qwen2.5-7B's only strict caution is saving a draft before sending an email, which it does in both versions of every email task; Qwen2.5-14B is almost never cautious at all (\QwenFourteenCautionNeutral{}). Figure~\ref{fig:comparison} puts the three measurements side by side: high probe accuracy, stated accuracy that rises with scale, and no behavioural sensitivity.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/gap.pdf}
+\caption{Blindness gap $K-A$ with 95\% bootstrap CIs, neutral (circles) and careful (squares) prompts, on the main tasks and on the ToolEmu cases (TE).}
+\label{fig:gap}
+\end{figure}
+
+The blindness gap (Figure~\ref{fig:gap}) is \QwenSevenGapNeutral{} \QwenSevenGapNeutralCI{} for Qwen2.5-7B, \LlamaEightGapNeutral{} \LlamaEightGapNeutralCI{} for Llama-3.1-8B and \QwenFourteenGapNeutral{} \QwenFourteenGapNeutralCI{} for Qwen2.5-14B. For the smaller models it is modest because $K$ itself is small (\QwenSevenKNeutral{} and \LlamaEightKNeutral{}): with a default answer, a model rarely states the contrast between the two versions of a task. Knowledge measured by the probe is strong in every model, knowledge measured by asking grows with scale, and behaviour reflects neither.
+
+\paragraph{A careful prompt.} An explicit instruction to be careful with irreversible actions does not change the strict caution of either Qwen model (McNemar $p\QwenSevenCarefulP$ and $p\QwenFourteenCarefulP$), although it changes their trajectories in other ways. For Llama-3.1-8B it raises caution a lot ($p\LlamaEightCarefulP$), but in both versions alike (over-caution on reversible versions rises with it), so sensitivity grows only to \LlamaEightSensCareful{}. The instruction makes the agent more careful in general, not more discriminating.
+
+\paragraph{An exploratory observation.} Llama-3.1-8B often calls tools that do not exist, such as \texttt{enable\_recycle\_bin}, before acting (32 of 60 irreversible versions, 22 of 60 reversible versions, neutral prompt). The pre-registered caution measure does not count these calls; they hint at awareness that is not expressed through the available tools.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth,height=0.25\textheight,keepaspectratio]{figures/steering.pdf}
+\caption{RQ4: caution and task success in the irreversible task versions as a function of steering strength along the probe direction (blue) and a random direction of the same norm (grey), with 95\% CIs over the 60 tasks.}
+\label{fig:steering}
+\end{figure*}
+
+\paragraph{RQ4: steering moves caution, against the hypothesis and in both versions.} The pre-registered rule set the strength range to $S=\QwenSevenSMax$ for every model. Adding the probe direction lowers caution in the irreversible versions monotonically (Figure~\ref{fig:steering}): from \QwenSevenSteerZero{} to \QwenSevenSteerProbePos{} at $+S$ for Qwen2.5-7B and from \LlamaEightSteerZero{} to \LlamaEightSteerProbePos{} for Llama-3.1-8B, while subtracting it raises caution (\QwenSevenSteerProbeNeg{} and \LlamaEightSteerProbeNeg{} at $-S$). A random direction of the same norm moves caution far less (Llama-3.1-8B: \LlamaEightSteerRandomNeg{} at $-S$, \LlamaEightSteerRandomPos{} at $+S$). The representation is therefore causally connected to caution, but with the opposite sign to the hypothesis of RQ4, and it acts on both task versions alike: along the probe direction, reversibility sensitivity stays within $\pm0.07$ at every strength for every model (all McNemar $p\ge0.12$). Task success stays high except for Llama-3.1-8B at $-S$ (\LlamaEightSteerProbeNegSuccess{}), and Qwen2.5-7B's output degrades at $-S$ (\QwenSevenSteerProbeNegParse{} parse failures in 120 runs). One reading is that the mean-difference direction mixes reversibility with a general ``proceed'' signal: in our states, irreversibility goes with safety features being switched off. Qwen2.5-14B is almost never cautious unsteered (\QwenFourteenSteerZero{}), so the positive direction has nothing to lower, and at $-S$ the probe direction raises caution no more than a random direction of the same norm (\QwenFourteenSteerProbeNeg{} and \QwenFourteenSteerRandomNeg{}) while task success falls to \QwenFourteenSteerProbeNegSuccess{}: at this scale the probe direction has no specific effect. The only nominally significant sensitivity in the three sweeps is one random-direction condition (Qwen2.5-14B at $-S$: 0.12, $p=0.02$, uncorrected for 51 tests).
+
+\input{generated/tab_rq5}
+
+\paragraph{RQ5: uncertainty is at most weakly related to reversibility.} Table~\ref{tab:rq5} shows AUROCs close to 0.5 for both the model's own prediction (\QwenSevenRQFiveAUROC{}, \LlamaEightRQFiveAUROC{}, \QwenFourteenRQFiveAUROC{} at $h=3$) and the reference next state (\QwenSevenRQFiveGold{}, \LlamaEightRQFiveGold{}, \QwenFourteenRQFiveGold{}), at every horizon. The two Qwen models' intervals exclude 0.5, Llama's do not. Irreversible transitions are thus slightly harder to predict for the Qwen models, but the effect is small next to the probe's separation, and next-state uncertainty carries little information about whether a transition can be undone.
+
+\input{generated/tab_toolemu}
+
+\paragraph{External test on ToolEmu cases.} Probes trained only on the main sandbox pairs transfer to the 108 pairs rebuilt from ToolEmu cases (Table~\ref{tab:toolemu}): balanced accuracy \QwenSevenToolEmuProbe{}, \LlamaEightToolEmuProbe{} and \QwenFourteenToolEmuProbe{} (AUROC \QwenSevenToolEmuAUROC{}, \LlamaEightToolEmuAUROC{} and \QwenFourteenToolEmuAUROC{}), while the lexical baseline is at chance because each case uses the same action in both versions. The gap between AUROC and balanced accuracy shows that the direction carries over but the decision threshold shifts. Behaviour repeats the main result (Table~\ref{tab:toolemu_behaviour} in the appendix): the agents take the risky action in almost every irreversible version (\QwenSevenToolEmuIrrAct{}, \LlamaEightToolEmuIrrAct{}, \QwenFourteenToolEmuIrrAct{}), caution does not depend on the version (sensitivity \QwenSevenToolEmuSens{}, \LlamaEightToolEmuSens{}, \QwenFourteenToolEmuSens{}), and the gap is \QwenSevenToolEmuGap{} \QwenSevenToolEmuGapCI{}, \LlamaEightToolEmuGap{} \LlamaEightToolEmuGapCI{} and \QwenFourteenToolEmuGap{} \QwenFourteenToolEmuGapCI{}.
+
+\paragraph{Model size: the gap grows.} Qwen2.5-14B encodes reversibility as well as the smaller models (sandbox probe \QwenFourteenProbeSandbox{} at layer \QwenFourteenLayer{} of \QwenFourteenLayers{}, \QwenFourteenProbeSandboxMin{} on minimal pairs; Tables~\ref{tab:probes} and~\ref{tab:ablations}). Unlike them, it also \emph{says} it: in \QwenFourteenKNeutral{} of the task pairs it correctly states which version's action is irreversible. Its behaviour does not follow. It is more careful in the irreversible version in only \QwenFourteenANeutral{} of the pairs, so the blindness gap rises to \QwenFourteenGapNeutral{} \QwenFourteenGapNeutralCI{} on the main tasks and \QwenFourteenToolEmuGap{} \QwenFourteenToolEmuGapCI{} on the ToolEmu cases (Table~\ref{tab:behaviour}, Figure~\ref{fig:gap}). Scale improves what the model says, not what it does; this is the clearest instance of irreversibility blindness in our data.
+
+\section{Limitations}
+\label{sec:limits}
+
+The sandbox is small and templated, and its reversibility is defined by its own design; the probe result on it shows that the models represent the settings that decide reversibility in this format, not that they hold a general concept. The failure of cross-environment transfer is consistent with this. ScienceWorld labels come from a pruned search that can only err towards ``irreversible'' (147 of 424 irreversible labels rest on a search cut short), partially reversible actions are rare there, and the horizon is 3 steps. The ToolEmu cases are adapted to four sandbox mechanisms, so they test the instructions and risks of ToolEmu but not its tools. We test three models from two families, at most 14B parameters, each run once with greedy decoding; behavioural CIs are over 60 task pairs. The control task is uninformative in our design because verbs recur across splits (\S5). Caution is measured through tool calls, so caution expressed only in text or in calls to non-existent tools is not counted. \AgreementSentence{} All irreversible actions happened inside the simulated sandbox; nothing touched real email, files or accounts, and no paid API was used.
+
+\section{Conclusion}
+
+Reversibility of an agent action is linearly decodable from the middle layers of all models we tested, including on minimal pairs where the action text is identical and a lexical baseline is at chance. Asked directly, the smaller models fall back on a default answer while the 14B model mostly answers correctly, yet as agents all of them are no more careful before irreversible actions than before reversible ones. An explicit instruction to be careful raises caution everywhere rather than where it matters, and steering along the probe direction changes caution in both task versions alike. The knowledge is there, and with scale it is even stated, but it does not reach action selection: the models are blind to irreversibility in what they do, not in what they encode.
+
+\bibliography{references}
+
+\appendix
+\section{Behaviour on the ToolEmu cases}
+\input{generated/tab_toolemu_behaviour}
+
+\section{Every experiment we ran}
+\label{app:log}
+
+The analysis plan, splits, metrics, layer-selection rule and steering-strength rule were fixed before any test-set result. The list below is every run, including the ones that did not work; development runs never used test-split results.
+
+\begin{itemize}
+\item \textbf{ScienceWorld labeller, first version} (discarded, kept as \texttt{scienceworld\_pairs.flawed\_v1.jsonl}): matched objects by name, did not resolve ambiguity prompts and treated replay noise as change. Manual checks found false ``irreversible'' labels; the fixed labeller re-ran from scratch.
+\item \textbf{RQ5 labeller, first version} (discarded): ignored objects that moved and compared container contents in order. Re-run after the fix.
+\item \textbf{Development runs} with Qwen2.5-0.5B and Llama-3.2-1B on a laptop CPU, and Qwen2.5-7B smoke tests on 12 tasks and 618 pairs on Modal. They led to five pre-test changes: a separate context for the RQ2 question, a tool list written as \texttt{name (args: \dots)}, an explicit recycle-bin description, identical tool results in both task versions, and number parsing for amounts such as ``\$1,250.00''.
+\item \textbf{Steering strengths:} in the first smoke test (Qwen2.5-7B, layer 20) strengths of magnitude 16 and 32 gave 100\% parse failures for both the probe and the random direction, and the safe range moved with the layer, so the fixed list was replaced by the in-run calibration rule before any reported run (record: \texttt{configs/steering.json}).
+\item \textbf{A queue check} on Modal (A10G) re-ran hidden states, layer selection and RQ2 for Qwen2.5-7B on the final data; its outputs are kept but not reported, so every reported run of a model uses one GPU type (L40S).
+\item \textbf{Layer re-selection:} the validation curves have near-ties at the top (differences of one validation example), so re-running the selection on other hardware picked a neighbouring layer for every model (Qwen2.5-7B 15 instead of 20, Llama-3.1-8B 11 instead of 10, Qwen2.5-14B 30 instead of 29). The layer chosen by the GPU run, which defined the steering direction, is the one reported; a draft of the analysis that used the re-selected layers was recomputed. For Qwen2.5-14B the re-selection also overwrote the steering files, and two steering conditions that started afterwards used layer 30; they were discarded (kept in the repository) and re-run with layer 29. The analysis now never re-selects an existing layer.
+\item \textbf{Reported runs:} the three models' full queues, the RQ4 sweep on all three models (Llama-3.1-8B and Qwen2.5-14B added after the main analysis), and the ToolEmu runs (added after the main analysis).
+\end{itemize}
+
+\end{document}

@@ -149,3 +149,35 @@ smoke on 12 tasks / 618 pairs), before any reported run, and do not use test-spl
 - 6 Nov: RQ5 labeller fixes after manual checks: objects that moved count as changed (only
   their containers did before), contents order ignored, inverse verbs ranked first. The
   first labelling is kept as `data/rq5/transitions.v1_crowded.jsonl` and not used.
+
+### Additions after the main runs (7 Nov)
+
+The main runs (Qwen2.5-7B, Llama-3.1-8B; probes, RQ2, RQ3, RQ4 on Qwen, RQ5) were analysed
+first. The items below were then added to cover every optional and recommended part of the
+brief. They are reported as additional analyses; none changes a pre-registered metric,
+split, layer rule, strength rule or prompt.
+
+- Qwen2.5-14B-Instruct (brief section 5, optional; ablation "model size"): the same queue as
+  Qwen2.5-7B, including the steering sweep with the same calibration rule.
+- RQ4 steering on Llama-3.1-8B with the same rule (planned for Qwen only).
+- ToolEmu (brief section 4.1, recommended): 54 of the 144 curated cases rebuilt as paired
+  sandbox tasks (`irrev/toolemu.py`). Used as an external test set: probes trained on all
+  sandbox rows (binary, selected layer) are tested on the 108 ToolEmu pairs, with the
+  lexical baseline trained the same way; RQ2 stated answers and RQ3 behaviour (neutral and
+  careful prompts) are computed with the same code as for the main tasks.
+- 95% bootstrap CIs (1,000 resamples, seed-0 test split) for every probe experiment at the
+  selected layer and at layer 0, and for the lexical and majority baselines
+  (`python -m irrev.probes ci`); the curves themselves report mean and sd over 3 seeds.
+- The main GPU runs used Modal L40S GPUs instead of the E2E A30 nodes; every reported run of
+  a model uses one GPU type, recorded in each `meta.json`.
+- Exploratory (not pre-registered): Llama-3.1-8B calls tools that do not exist in the
+  sandbox (`enable_recycle_bin`, `enable_version_history`); counted per task version.
+- Layer selection is done once, by the GPU queue's `select-layer` job; later `probes all` runs
+  reuse `best_layer.json` and the steering direction (fix after an incident on 7 Nov: a re-run
+  of the analysis on a 32-core CPU container re-selected Qwen2.5-14B's layer as 30 instead of 29
+  (validation accuracy 0.998 vs 1.000, one example) and overwrote the files; two steering
+  conditions that started afterwards used layer 30. They are kept in
+  `results/modal/discarded_qwen14b_layer30/` and were re-run with layer 29).
+- After a power cut stopped the detached runs, the remaining Llama-3.1-8B and Qwen2.5-14B steering
+  conditions and the Qwen2.5-14B probe analysis were resumed from their checkpoints as calls on a
+  deployed Modal app.

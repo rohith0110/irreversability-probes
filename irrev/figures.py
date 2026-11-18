@@ -61,7 +61,10 @@ def probe_plot(curves: dict[str, Curve], baselines: dict[str, dict[str, dict[str
 
 def gap_plot(models: dict[str, dict[str, dict[str, float]]], out: Path) -> None:
     fig, ax = plt.subplots(figsize=(5.2, 3.2))
-    names, values, lows, highs = [], [], [], []
+    names: list[str] = []
+    values: list[float] = []
+    lows: list[float] = []
+    highs: list[float] = []
     for model, report in models.items():
         for condition in ("neutral", "careful"):
             gap = report.get(condition, {}).get("blindness_gap")
@@ -91,7 +94,7 @@ def comparison_plot(models: dict[str, tuple[dict[str, float], dict[str, Curve], 
                 probe[layer] if layer < len(probe) else float("nan"),
                 sens.get("value", float("nan")) if isinstance(sens, dict) else float("nan")]
         ax.bar([i + m * width for i in range(3)], bars, width, label=model)
-    ax.set_xticks([i + width / 2 for i in range(3)], ["stated accuracy", "probe bal. acc.\n(selected layer)", "behaviour\nsensitivity"], fontsize=8)
+    ax.set_xticks([i + width * (len(models) - 1) / 2 for i in range(3)],["stated accuracy", "probe bal. acc.\n(selected layer)", "behaviour\nsensitivity"], fontsize=8)
     ax.legend(fontsize=8, frameon=False)
     ax.spines[["top", "right"]].set_visible(False)
     fig.tight_layout()
@@ -163,7 +166,7 @@ def ablation_table(curves: dict[str, Curve], layer: int) -> str:
 def main() -> None:
     parser = argparse.ArgumentParser(description="Make every report figure and table from results/.")
     parser.add_argument("--results", type=Path, default=Path("results"))
-    parser.add_argument("--models", nargs="*", default=["qwen7b", "llama8b"])
+    parser.add_argument("--models", nargs="*", default=["qwen7b", "llama8b", "qwen14b"])
     parser.add_argument("--out", type=Path, default=Path("figures"))
     args = parser.parse_args()
     args.out.mkdir(parents=True, exist_ok=True)
@@ -187,7 +190,7 @@ def main() -> None:
         gap_inputs[model] = behaviour
         stated_path = probes / "stated_vs_probe.json"
         comparison[model] = (json.loads(stated_path.read_text()) if stated_path.exists() else {}, curves, behaviour, layer)
-        rq5_path = args.results / model / "rq5" / "nll.jsonl"
+        rq5_path = args.results / model / "rq5" / "scores.jsonl"
         if rq5_path.exists():
             rq5_plot(rq5_path, model, args.out / f"rq5_{model}.png")
         steering_path = args.results / model / "steering_behaviour.json"

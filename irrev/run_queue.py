@@ -7,7 +7,8 @@ Hugging Face dataset repo every hour and once more at the end. Nothing is ever d
 
 Node plans (three E2E accounts, about 24 h each):
   qwen   - Qwen2.5-7B: hidden states, layer selection, RQ2, RQ3 neutral and careful, RQ4 sweep
-  llama  - Llama-3.1-8B: hidden states, layer selection, RQ2, RQ3 neutral and careful
+  llama  - Llama-3.1-8B: hidden states, layer selection, RQ2, RQ3 neutral and careful, RQ4 sweep
+  qwen14b - Qwen2.5-14B (optional size check, brief section 5): same jobs as qwen, incl. RQ4 sweep
   smoke  - Qwen2.5-0.5B on a few items: proves the queue end to end in minutes
 """
 
@@ -39,6 +40,15 @@ def model_jobs(alias: str, root: Path, limit_args: list[str], tasks: list[str], 
         ("agent_neutral", ["-m", "irrev.agent", "--model", alias, "--style", "neutral", "--out", str(root / "agent" / "neutral"), "--max-tokens", "16000", *task_args]),
         ("agent_careful", ["-m", "irrev.agent", "--model", alias, "--style", "careful", "--out", str(root / "agent" / "careful"), "--max-tokens", "16000", *task_args]),
     ]
+    toolemu = Path("data/toolemu_pairs.jsonl")
+    jobs += [
+        ("toolemu_hidden", ["-m", "irrev.hidden", "--model", alias, "--pairs", str(toolemu), "--out", str(root / "toolemu_hidden")]),
+        ("toolemu_stated", ["-m", "irrev.stated", "--model", alias, "--pairs", str(toolemu), "--task-set", "toolemu",
+                            "--out", str(root / "toolemu_stated.jsonl")]),
+        *[(f"toolemu_agent_{style}", ["-m", "irrev.agent", "--model", alias, "--style", style, "--task-set", "toolemu",
+                                      "--out", str(root / "toolemu_agent" / style), "--max-tokens", "16000"])
+          for style in ("neutral", "careful")],
+    ]
     jobs.append(("rq5_nll", ["-m", "irrev.rq5", "nll", "--model", alias, "--out", str(root / "rq5" / "nll.jsonl"),
                              *(["--limit", "20"] if limit_args else [])]))
     if steer:
@@ -52,7 +62,9 @@ def plan(name: str) -> list[tuple[str, list[str]]]:
     if name == "qwen":
         return model_jobs("qwen7b", Path("results/qwen7b"), [], [], steer=True)
     if name == "llama":
-        return model_jobs("llama8b", Path("results/llama8b"), [], [], steer=False)
+        return model_jobs("llama8b", Path("results/llama8b"), [], [], steer=True)
+    if name == "qwen14b":
+        return model_jobs("qwen14b", Path("results/qwen14b"), [], [], steer=True)
     if name == "smoke":
         return model_jobs("qwen0.5b", Path("results/dryrun_qwen0.5b"), ["--limit", "60"],
                           ["free_space_00", "pay_invoice_00"], steer=True, strengths=["0", "8"])
@@ -111,7 +123,7 @@ def sync_loop(repo: str | None, folders: list[str], stop: threading.Event, log: 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run one node's job queue.")
-    parser.add_argument("plan", choices=("qwen", "llama", "smoke", "smoke_llama"))
+    parser.add_argument("plan", choices=("qwen", "llama", "qwen14b", "smoke", "smoke_llama"))
     parser.add_argument("--sync-repo", default=os.environ.get("IRREV_SYNC_REPO"))
     parser.add_argument("--only", nargs="*", default=None, help="run only these job names")
     args = parser.parse_args()

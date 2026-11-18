@@ -1,0 +1,20 @@
+\begin{table}[t]
+\centering\small\setlength{\tabcolsep}{3pt}
+\resizebox{\columnwidth}{!}{\begin{tabular}{lcccccc}
+\toprule
+Model & $h$ & Irr./Rev. & AUROC own pred. & Within game & AUROC gold & Exact \\
+\midrule
+Qwen2.5-7B & 1 & 397/329 & 0.56 [0.52, 0.60] & 0.54 & 0.55 [0.50, 0.58] & 0.05 \\
+ & 2 & 384/346 & 0.56 [0.52, 0.61] & 0.53 & 0.54 [0.50, 0.58] &  \\
+ & 3 & 384/348 & 0.56 [0.52, 0.60] & 0.53 & 0.54 [0.50, 0.58] &  \\
+Llama-3.1-8B & 1 & 397/329 & 0.53 [0.49, 0.57] & 0.62 & 0.49 [0.45, 0.53] & 0.00 \\
+ & 2 & 384/346 & 0.53 [0.48, 0.57] & 0.60 & 0.50 [0.46, 0.54] &  \\
+ & 3 & 384/348 & 0.53 [0.49, 0.57] & 0.60 & 0.50 [0.46, 0.54] &  \\
+Qwen2.5-14B & 1 & 397/329 & 0.58 [0.54, 0.63] & 0.56 & 0.62 [0.57, 0.65] & 0.30 \\
+ & 2 & 384/346 & 0.59 [0.54, 0.63] & 0.56 & 0.60 [0.56, 0.64] &  \\
+ & 3 & 384/348 & 0.59 [0.55, 0.63] & 0.56 & 0.60 [0.56, 0.64] &  \\
+\bottomrule
+\end{tabular}}
+\caption{RQ5 on ByteSized32-State-Prediction ({\RQFiveN} transitions, 31 games). AUROC of the mean token negative log-likelihood for separating irreversible from reversible transitions (0.5 = no relation), with a bootstrap 95\% CI; ``own pred.'' scores the model's greedy next-state prediction, ``gold'' the reference next state. Within game = mean AUROC inside games that have both classes. Exact = exact-match rate of the predicted state.}
+\label{tab:rq5}
+\end{table}

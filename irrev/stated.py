@@ -17,7 +17,7 @@ from irrev.dataset import read_pairs
 from irrev.models import generate, length_batches, load, render, run_metadata
 from irrev.prompts import Message, parse_stated, stated_messages
 from irrev.sandbox import Sandbox
-from irrev.tasks import all_tasks
+from irrev.tasks import tasks_in
 
 MAX_NEW_TOKENS = 10
 
@@ -27,7 +27,7 @@ def reverse_order(ident: str) -> bool:
     return hashlib.sha1(ident.encode()).digest()[0] % 2 == 1
 
 
-def questions(pairs_path: Path, limit: int) -> list[tuple[str, dict[str, str], list[Message]]]:
+def questions(pairs_path: Path, limit: int, task_set: str = "main") -> list[tuple[str, dict[str, str], list[Message]]]:
     items: list[tuple[str, dict[str, str], list[Message]]] = []
     rows = read_pairs(pairs_path)
     for row in rows[:limit] if limit else rows:
@@ -35,7 +35,7 @@ def questions(pairs_path: Path, limit: int) -> list[tuple[str, dict[str, str], l
         info = {"kind": "pair", "label": row["label"], "environment": row["environment"], "options_reversed": str(flip)}
         items.append((row["id"], info, stated_messages(row["environment"], row["state_text"], row["task_text"],
                                                        row["action_text"], flip)))
-    for task in all_tasks():
+    for task in tasks_in(task_set):
         for version in ("reversible", "irreversible"):
             sb = Sandbox(task.build(version))
             call = task.target_call()
@@ -47,12 +47,13 @@ def questions(pairs_path: Path, limit: int) -> list[tuple[str, dict[str, str], l
     return items
 
 
-def run(model_name: str, pairs_path: Path, out_path: Path, max_tokens: int, max_batch: int, limit: int) -> None:
+def run(model_name: str, pairs_path: Path, out_path: Path, max_tokens: int, max_batch: int, limit: int,
+        task_set: str = "main") -> None:
     out_path.parent.mkdir(parents=True, exist_ok=True)
     done: set[str] = set()
     if out_path.exists():
         done = {json.loads(line)["id"] for line in out_path.read_text(encoding="utf-8").splitlines() if line}
-    items = [it for it in questions(pairs_path, limit) if it[0] not in done]
+    items = [it for it in questions(pairs_path, limit, task_set) if it[0] not in done]
     if not items:
         print("stated: nothing to do")
         return
@@ -82,8 +83,9 @@ def main() -> None:
     parser.add_argument("--max-tokens", type=int, default=16000)
     parser.add_argument("--max-batch", type=int, default=32)
     parser.add_argument("--limit", type=int, default=0)
+    parser.add_argument("--task-set", choices=("main", "toolemu"), default="main")
     args = parser.parse_args()
-    run(args.model, args.pairs, args.out, args.max_tokens, args.max_batch, args.limit)
+    run(args.model, args.pairs, args.out, args.max_tokens, args.max_batch, args.limit, args.task_set)
 
 
 if __name__ == "__main__":

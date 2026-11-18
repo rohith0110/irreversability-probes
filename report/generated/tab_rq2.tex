@@ -1,0 +1,17 @@
+\begin{table}[t]
+\centering\small\setlength{\tabcolsep}{3pt}
+\resizebox{\columnwidth}{!}{\begin{tabular}{llccccc}
+\toprule
+Model & Env. & Stated acc.\ [CI] & $\kappa$ truth & $\kappa$ probe & Unparsed & $n$ \\
+\midrule
+Qwen2.5-7B & Sandbox & 0.38 [0.34, 0.44] & 0.11 & 0.11 & 0.0\% & 303 \\
+ & ScienceWorld & 0.38 [0.33, 0.45] & 0.00 & 0.01 & 0.0\% & 228 \\
+Llama-3.1-8B & Sandbox & 0.45 [0.41, 0.53] & 0.11 & 0.10 & 0.0\% & 303 \\
+ & ScienceWorld & 0.67 [0.64, 0.75] & 0.28 & 0.31 & 0.0\% & 228 \\
+Qwen2.5-14B & Sandbox & 0.66 [0.58, 0.69] & 0.47 & 0.46 & 0.0\% & 303 \\
+ & ScienceWorld & 0.66 [0.55, 0.68] & 0.33 & 0.37 & 0.0\% & 228 \\
+\bottomrule
+\end{tabular}}
+\caption{RQ2: the model asked directly whether the action can be undone (three labels, option order counterbalanced), on the test pairs. Accuracy is the mean over three splits with the seed-0 95\% CI; $\kappa$ = Cohen's kappa of the stated answer with the true label and with the three-class probe at the selected layer.}
+\label{tab:rq2}
+\end{table}

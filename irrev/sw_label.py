@@ -40,11 +40,13 @@ from collections import Counter
 from dataclasses import asdict, dataclass, field
 from multiprocessing import get_context
 from pathlib import Path
-from typing import TypedDict
+from typing import Literal, TypedDict
 
 NOOP = "look at agent"
 NUMERIC_KEYS = ("combustionTicks", "temperatureC")
-PROP_KEYS = (
+PropKey = Literal["propMaterial", "propEdibility", "propContainer", "propDevice", "propHeatSource",
+                  "propCoolingSource", "propPortal", "propMoveable", "propElectricalConnection", "propLife"]
+PROP_KEYS: tuple[PropKey, ...] = (
     "propMaterial", "propEdibility", "propContainer", "propDevice", "propHeatSource",
     "propCoolingSource", "propPortal", "propMoveable", "propElectricalConnection", "propLife",
 )

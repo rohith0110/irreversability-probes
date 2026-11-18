@@ -1,0 +1,710 @@
+{
+ "main|sandbox->sandbox|binary|last|h3|layer0": {
+  "balanced_accuracy": 0.5489677307425399,
+  "n_test": 219.0,
+  "ci_low": 0.47995866127605424,
+  "ci_high": 0.6065734831264207,
+  "minimal_balanced_accuracy": 0.5,
+  "minimal_n_test": 166.0,
+  "minimal_ci_low": 0.4239026177074957,
+  "minimal_ci_high": 0.5720985864014767
+ },
+ "token_mean|sandbox->sandbox|binary|mean|h3|layer0": {
+  "balanced_accuracy": 0.6641221374045801,
+  "n_test": 219.0,
+  "ci_low": 0.6258522727272727,
+  "ci_high": 0.7050457308571748,
+  "minimal_balanced_accuracy": 0.5,
+  "minimal_n_test": 166.0,
+  "minimal_ci_low": 0.5,
+  "minimal_ci_high": 0.5
+ },
+ "shuffled|sandbox->sandbox|binary|last|h3|layer0": {
+  "balanced_accuracy": 0.4510322692574601,
+  "n_test": 219.0,
+  "ci_low": 0.39342651687357927,
+  "ci_high": 0.5200413387239458,
+  "minimal_balanced_accuracy": 0.5,
+  "minimal_n_test": 166.0,
+  "minimal_ci_low": 0.42790141359852324,
+  "minimal_ci_high": 0.5760973822925042
+ },
+ "control|sandbox->sandbox|binary|last|h3|layer0": {
+  "balanced_accuracy": 0.6863926293408931,
+  "n_test": 219.0,
+  "ci_low": 0.6316522339780308,
+  "ci_high": 0.7401363728470112,
+  "minimal_balanced_accuracy": 0.7080269607843137,
+  "minimal_n_test": 166.0,
+  "minimal_ci_low": 0.6515103100370903,
+  "minimal_ci_high": 0.7659739454094293
+ },
+ "minimal_only|sandbox->sandbox|binary|last|h3|layer0": {
+  "balanced_accuracy": 0.5,
+  "n_test": 219.0,
+  "ci_low": 0.5,
+  "ci_high": 0.5,
+  "minimal_balanced_accuracy": 0.5,
+  "minimal_n_test": 166.0,
+  "minimal_ci_low": 0.5,
+  "minimal_ci_high": 0.5
+ },
+ "main|sandbox->sandbox|three|last|h3|layer0": {
+  "balanced_accuracy": 0.3659784871616933,
+  "n_test": 306.0,
+  "ci_low": 0.3225111653272101,
+  "ci_high": 0.40915113249019464,
+  "minimal_balanced_accuracy": 0.3333333333333333,
+  "minimal_n_test": 249.0,
+  "minimal_ci_low": 0.2850428249015238,
+  "minimal_ci_high": 0.38157909136989565
+ },
+ "token_mean|sandbox->sandbox|three|mean|h3|layer0": {
+  "balanced_accuracy": 0.45663698049194235,
+  "n_test": 306.0,
+  "ci_low": 0.4056207501276646,
+  "ci_high": 0.507333767611767,
+  "minimal_balanced_accuracy": 0.3333333333333333,
+  "minimal_n_test": 249.0,
+  "minimal_ci_low": 0.2881503823408655,
+  "minimal_ci_high": 0.37893277090135685
+ },
+ "shuffled|sandbox->sandbox|three|last|h3|layer0": {
+  "balanced_accuracy": 0.3006881795049734,
+  "n_test": 306.0,
+  "ci_low": 0.25751553417647205,
+  "ci_high": 0.34415550133945655,
+  "minimal_balanced_accuracy": 0.3333333333333333,
+  "minimal_n_test": 249.0,
+  "minimal_ci_low": 0.28508757529677103,
+  "minimal_ci_high": 0.38162384176514297
+ },
+ "control|sandbox->sandbox|three|last|h3|layer0": {
+  "balanced_accuracy": 0.5476190476190476,
+  "n_test": 306.0,
+  "ci_low": 0.472159090909091,
+  "ci_high": 0.602579365079365,
+  "minimal_balanced_accuracy": 0.0,
+  "minimal_n_test": 249.0,
+  "minimal_ci_low": 0.0,
+  "minimal_ci_high": 0.0
+ },
+ "minimal_only|sandbox->sandbox|three|last|h3|layer0": {
+  "balanced_accuracy": 0.3333333333333333,
+  "n_test": 306.0,
+  "ci_low": 0.3333333333333333,
+  "ci_high": 0.3333333333333333,
+  "minimal_balanced_accuracy": 0.3333333333333333,
+  "minimal_n_test": 249.0,
+  "minimal_ci_low": 0.3333333333333333,
+  "minimal_ci_high": 0.3333333333333333
+ },
+ "main|scienceworld->scienceworld|binary|last|h3|layer0": {
+  "balanced_accuracy": 0.7086206896551723,
+  "n_test": 235.0,
+  "ci_low": 0.647522198923061,
+  "ci_high": 0.7671994603778199,
+  "minimal_balanced_accuracy": 0.6166666666666667,
+  "minimal_n_test": 46.0,
+  "minimal_ci_low": 0.4746018213319811,
+  "minimal_ci_high": 0.7616632860040567
+ },
+ "token_mean|scienceworld->scienceworld|binary|mean|h3|layer0": {
+  "balanced_accuracy": 0.882183908045977,
+  "n_test": 235.0,
+  "ci_low": 0.8356862745098039,
+  "ci_high": 0.9247280684884559,
+  "minimal_balanced_accuracy": 0.6354166666666667,
+  "minimal_n_test": 46.0,
+  "minimal_ci_low": 0.49598214285714287,
+  "minimal_ci_high": 0.7790215773809525
+ },
+ "shuffled|scienceworld->scienceworld|binary|last|h3|layer0": {
+  "balanced_accuracy": 0.49789272030651344,
+  "n_test": 235.0,
+  "ci_low": 0.4354894715338922,
+  "ci_high": 0.5654360534374145,
+  "minimal_balanced_accuracy": 0.4875,
+  "minimal_n_test": 46.0,
+  "minimal_ci_low": 0.3459784226190476,
+  "minimal_ci_high": 0.6440162271805274
+ },
+ "control|scienceworld->scienceworld|binary|last|h3|layer0": {
+  "balanced_accuracy": 0.7331030897207367,
+  "n_test": 235.0,
+  "ci_low": 0.6760187523545595,
+  "ci_high": 0.7927967066388599,
+  "minimal_balanced_accuracy": 0.9615384615384616,
+  "minimal_n_test": 46.0,
+  "minimal_ci_low": 0.9125,
+  "minimal_ci_high": 1.0
+ },
+ "minimal_only|scienceworld->scienceworld|binary|last|h3|layer0": {
+  "balanced_accuracy": 0.5438697318007663,
+  "n_test": 235.0,
+  "ci_low": 0.5091595160791589,
+  "ci_high": 0.5813475778375506,
+  "minimal_balanced_accuracy": 0.6354166666666667,
+  "minimal_n_test": 46.0,
+  "minimal_ci_low": 0.49598214285714287,
+  "minimal_ci_high": 0.7790215773809525
+ },
+ "main|scienceworld->scienceworld|three|last|h3|layer0": {
+  "balanced_accuracy": 0.7367816091954023,
+  "n_test": 238.0,
+  "ci_low": 0.5991666666666666,
+  "ci_high": 0.7784124198985183,
+  "minimal_balanced_accuracy": 0.7444444444444445,
+  "minimal_n_test": 47.0,
+  "minimal_ci_low": 0.49479166666666663,
+  "minimal_ci_high": 0.835126033687071
+ },
+ "token_mean|scienceworld->scienceworld|three|mean|h3|layer0": {
+  "balanced_accuracy": 0.8813537675606641,
+  "n_test": 238.0,
+  "ci_low": 0.8259940159574468,
+  "ci_high": 0.9152408153183753,
+  "minimal_balanced_accuracy": 0.7236111111111111,
+  "minimal_n_test": 47.0,
+  "minimal_ci_low": 0.461038961038961,
+  "minimal_ci_high": 0.8129211469534051
+ },
+ "shuffled|scienceworld->scienceworld|three|last|h3|layer0": {
+  "balanced_accuracy": 0.2693486590038314,
+  "n_test": 238.0,
+  "ci_low": 0.2287523839217602,
+  "ci_high": 0.40618410397074184,
+  "minimal_balanced_accuracy": 0.2708333333333333,
+  "minimal_n_test": 47.0,
+  "minimal_ci_low": 0.19219757094757092,
+  "minimal_ci_high": 0.5186941721132896
+ },
+ "control|scienceworld->scienceworld|three|last|h3|layer0": {
+  "balanced_accuracy": 0.697624735420027,
+  "n_test": 238.0,
+  "ci_low": 0.638940916254746,
+  "ci_high": 0.7539959796753275,
+  "minimal_balanced_accuracy": 0.6991452991452992,
+  "minimal_n_test": 47.0,
+  "minimal_ci_low": 0.5880858395989975,
+  "minimal_ci_high": 0.8727134146341462
+ },
+ "minimal_only|scienceworld->scienceworld|three|last|h3|layer0": {
+  "balanced_accuracy": 0.5319284802043422,
+  "n_test": 238.0,
+  "ci_low": 0.30093207573500136,
+  "ci_high": 0.668577704325901,
+  "minimal_balanced_accuracy": 0.6902777777777778,
+  "minimal_n_test": 47.0,
+  "minimal_ci_low": 0.4042053492484527,
+  "minimal_ci_high": 0.7812528001792115
+ },
+ "main|all->all|binary|last|h3|layer0": {
+  "balanced_accuracy": 0.6353606904412963,
+  "n_test": 454.0,
+  "ci_low": 0.5910301790677498,
+  "ci_high": 0.6841881986139765,
+  "minimal_balanced_accuracy": 0.5387950299454725,
+  "minimal_n_test": 212.0,
+  "minimal_ci_low": 0.47245167712179015,
+  "minimal_ci_high": 0.607020688933574
+ },
+ "main|all->all|three|last|h3|layer0": {
+  "balanced_accuracy": 0.5652608152852413,
+  "n_test": 544.0,
+  "ci_low": 0.5339236465789657,
+  "ci_high": 0.6010829284695403,
+  "minimal_balanced_accuracy": 0.42119786146334826,
+  "minimal_n_test": 296.0,
+  "minimal_ci_low": 0.3917202083678337,
+  "minimal_ci_high": 0.45370019357590996
+ },
+ "transfer|sandbox->scienceworld|binary|last|h3|layer0": {
+  "balanced_accuracy": 0.5446360153256705,
+  "n_test": 235.0,
+  "ci_low": 0.48821245346429715,
+  "ci_high": 0.6025774094904419,
+  "minimal_balanced_accuracy": 0.4770833333333333,
+  "minimal_n_test": 46.0,
+  "minimal_ci_low": 0.32943469785575047,
+  "minimal_ci_high": 0.6117730880230878
+ },
+ "transfer|scienceworld->sandbox|binary|last|h3|layer0": {
+  "balanced_accuracy": 0.5,
+  "n_test": 219.0,
+  "ci_low": 0.5,
+  "ci_high": 0.5,
+  "minimal_balanced_accuracy": 0.5,
+  "minimal_n_test": 166.0,
+  "minimal_ci_low": 0.5,
+  "minimal_ci_high": 0.5
+ },
+ "transfer|sandbox->scienceworld|three|last|h3|layer0": {
+  "balanced_accuracy": 0.36309067688378033,
+  "n_test": 238.0,
+  "ci_low": 0.32340276765763143,
+  "ci_high": 0.5351219832774948,
+  "minimal_balanced_accuracy": 0.31805555555555554,
+  "minimal_n_test": 47.0,
+  "minimal_ci_low": 0.23140015015015017,
+  "minimal_ci_high": 0.5778950216450215
+ },
+ "transfer|scienceworld->sandbox|three|last|h3|layer0": {
+  "balanced_accuracy": 0.3333333333333333,
+  "n_test": 306.0,
+  "ci_low": 0.3333333333333333,
+  "ci_high": 0.3333333333333333,
+  "minimal_balanced_accuracy": 0.3333333333333333,
+  "minimal_n_test": 249.0,
+  "minimal_ci_low": 0.3333333333333333,
+  "minimal_ci_high": 0.3333333333333333
+ },
+ "horizon|scienceworld->scienceworld|binary|last|h1|layer0": {
+  "balanced_accuracy": 0.7472527472527473,
+  "n_test": 235.0,
+  "ci_low": 0.6914527286503093,
+  "ci_high": 0.8046688910987593,
+  "minimal_balanced_accuracy": 0.7423935091277891,
+  "minimal_n_test": 46.0,
+  "minimal_ci_low": 0.6078346855983773,
+  "minimal_ci_high": 0.8722194050033806
+ },
+ "horizon|scienceworld->scienceworld|three|last|h1|layer0": {
+  "balanced_accuracy": 0.7545787545787546,
+  "n_test": 238.0,
+  "ci_low": 0.6310858718487394,
+  "ci_high": 0.7923714985122751,
+  "minimal_balanced_accuracy": 0.8282623394185261,
+  "minimal_n_test": 47.0,
+  "minimal_ci_low": 0.6334313725490196,
+  "minimal_ci_high": 0.9074156746031746
+ },
+ "horizon|scienceworld->scienceworld|binary|last|h2|layer0": {
+  "balanced_accuracy": 0.7520184967704051,
+  "n_test": 235.0,
+  "ci_low": 0.6965252083501787,
+  "ci_high": 0.8090003292857624,
+  "minimal_balanced_accuracy": 0.7423935091277891,
+  "minimal_n_test": 46.0,
+  "minimal_ci_low": 0.6078346855983773,
+  "minimal_ci_high": 0.8722194050033806
+ },
+ "horizon|scienceworld->scienceworld|three|last|h2|layer0": {
+  "balanced_accuracy": 0.7583431199843415,
+  "n_test": 238.0,
+  "ci_low": 0.6310858718487394,
+  "ci_high": 0.7960246856496098,
+  "minimal_balanced_accuracy": 0.8282623394185261,
+  "minimal_n_test": 47.0,
+  "minimal_ci_low": 0.6334313725490196,
+  "minimal_ci_high": 0.9074156746031746
+ },
+ "main|sandbox->sandbox|binary|last|h3|layer29": {
+  "balanced_accuracy": 0.9923664122137404,
+  "n_test": 219.0,
+  "ci_low": 0.9806201550387597,
+  "ci_high": 1.0,
+  "minimal_balanced_accuracy": 0.9879518072289157,
+  "minimal_n_test": 166.0,
+  "minimal_ci_low": 0.9695121951219512,
+  "minimal_ci_high": 1.0
+ },
+ "token_mean|sandbox->sandbox|binary|mean|h3|layer29": {
+  "balanced_accuracy": 1.0,
+  "n_test": 219.0,
+  "ci_low": 1.0,
+  "ci_high": 1.0,
+  "minimal_balanced_accuracy": 1.0,
+  "minimal_n_test": 166.0,
+  "minimal_ci_low": 1.0,
+  "minimal_ci_high": 1.0
+ },
+ "shuffled|sandbox->sandbox|binary|last|h3|layer29": {
+  "balanced_accuracy": 0.5400763358778626,
+  "n_test": 219.0,
+  "ci_low": 0.4670260230534528,
+  "ci_high": 0.6075303460905084,
+  "minimal_balanced_accuracy": 0.5481927710843373,
+  "minimal_n_test": 166.0,
+  "minimal_ci_low": 0.47831950354038494,
+  "minimal_ci_high": 0.6218203290611827
+ },
+ "control|sandbox->sandbox|binary|last|h3|layer29": {
+  "balanced_accuracy": 1.0,
+  "n_test": 219.0,
+  "ci_low": 1.0,
+  "ci_high": 1.0,
+  "minimal_balanced_accuracy": 1.0,
+  "minimal_n_test": 166.0,
+  "minimal_ci_low": 1.0,
+  "minimal_ci_high": 1.0
+ },
+ "minimal_only|sandbox->sandbox|binary|last|h3|layer29": {
+  "balanced_accuracy": 0.8721807772380292,
+  "n_test": 219.0,
+  "ci_low": 0.8355248762295615,
+  "ci_high": 0.9083969465648856,
+  "minimal_balanced_accuracy": 0.9879518072289157,
+  "minimal_n_test": 166.0,
+  "minimal_ci_low": 0.9695121951219512,
+  "minimal_ci_high": 1.0
+ },
+ "main|sandbox->sandbox|three|last|h3|layer29": {
+  "balanced_accuracy": 0.931267133030755,
+  "n_test": 306.0,
+  "ci_low": 0.9009436590943635,
+  "ci_high": 0.9573708888651832,
+  "minimal_balanced_accuracy": 0.9196787148594376,
+  "minimal_n_test": 249.0,
+  "minimal_ci_low": 0.8832945989195989,
+  "minimal_ci_high": 0.9521054527961552
+ },
+ "token_mean|sandbox->sandbox|three|mean|h3|layer29": {
+  "balanced_accuracy": 0.983460227438906,
+  "n_test": 306.0,
+  "ci_low": 0.968107626534955,
+  "ci_high": 0.9973753280839895,
+  "minimal_balanced_accuracy": 0.9839357429718877,
+  "minimal_n_test": 249.0,
+  "minimal_ci_low": 0.9651004185090531,
+  "minimal_ci_high": 0.9964167238618165
+ },
+ "shuffled|sandbox->sandbox|three|last|h3|layer29": {
+  "balanced_accuracy": 0.3363863696187992,
+  "n_test": 306.0,
+  "ci_low": 0.28329714944960044,
+  "ci_high": 0.39146865796495156,
+  "minimal_balanced_accuracy": 0.3453815261044177,
+  "minimal_n_test": 249.0,
+  "minimal_ci_low": 0.2858434204863362,
+  "minimal_ci_high": 0.40087524457209855
+ },
+ "control|sandbox->sandbox|three|last|h3|layer29": {
+  "balanced_accuracy": 1.0,
+  "n_test": 306.0,
+  "ci_low": 1.0,
+  "ci_high": 1.0,
+  "minimal_balanced_accuracy": 1.0,
+  "minimal_n_test": 249.0,
+  "minimal_ci_low": 1.0,
+  "minimal_ci_high": 1.0
+ },
+ "minimal_only|sandbox->sandbox|three|last|h3|layer29": {
+  "balanced_accuracy": 0.8156213357582138,
+  "n_test": 306.0,
+  "ci_low": 0.7744873514963103,
+  "ci_high": 0.8550160058367705,
+  "minimal_balanced_accuracy": 0.9236947791164659,
+  "minimal_n_test": 249.0,
+  "minimal_ci_low": 0.8879229507985056,
+  "minimal_ci_high": 0.9560416813404642
+ },
+ "main|scienceworld->scienceworld|binary|last|h3|layer29": {
+  "balanced_accuracy": 0.9452107279693487,
+  "n_test": 235.0,
+  "ci_low": 0.9145059865836385,
+  "ci_high": 0.9739549691186863,
+  "minimal_balanced_accuracy": 0.7958333333333334,
+  "minimal_n_test": 46.0,
+  "minimal_ci_low": 0.6785218253968255,
+  "minimal_ci_high": 0.9117942489495798
+ },
+ "token_mean|scienceworld->scienceworld|binary|mean|h3|layer29": {
+  "balanced_accuracy": 0.9521072796934866,
+  "n_test": 235.0,
+  "ci_low": 0.9196047008547008,
+  "ci_high": 0.979896677059017,
+  "minimal_balanced_accuracy": 0.875,
+  "minimal_n_test": 46.0,
+  "minimal_ci_low": 0.7646671826625386,
+  "minimal_ci_high": 0.9722222222222222
+ },
+ "shuffled|scienceworld->scienceworld|binary|last|h3|layer29": {
+  "balanced_accuracy": 0.4936781609195402,
+  "n_test": 235.0,
+  "ci_low": 0.4326894941478275,
+  "ci_high": 0.5536577949179118,
+  "minimal_balanced_accuracy": 0.475,
+  "minimal_n_test": 46.0,
+  "minimal_ci_low": 0.3407875617553037,
+  "minimal_ci_high": 0.6193734187223277
+ },
+ "control|scienceworld->scienceworld|binary|last|h3|layer29": {
+  "balanced_accuracy": 0.994949494949495,
+  "n_test": 235.0,
+  "ci_low": 0.9840338806660499,
+  "ci_high": 1.0,
+  "minimal_balanced_accuracy": 1.0,
+  "minimal_n_test": 46.0,
+  "minimal_ci_low": 1.0,
+  "minimal_ci_high": 1.0
+ },
+ "minimal_only|scienceworld->scienceworld|binary|last|h3|layer29": {
+  "balanced_accuracy": 0.5689655172413793,
+  "n_test": 235.0,
+  "ci_low": 0.5248069977415593,
+  "ci_high": 0.6114869976359338,
+  "minimal_balanced_accuracy": 0.8270833333333334,
+  "minimal_n_test": 46.0,
+  "minimal_ci_low": 0.7129254955570745,
+  "minimal_ci_high": 0.9365327380952381
+ },
+ "main|scienceworld->scienceworld|three|last|h3|layer29": {
+  "balanced_accuracy": 0.947765006385696,
+  "n_test": 238.0,
+  "ci_low": 0.9169857035360903,
+  "ci_high": 0.9702877868362715,
+  "minimal_balanced_accuracy": 0.8638888888888889,
+  "minimal_n_test": 47.0,
+  "minimal_ci_low": 0.6940178571428571,
+  "minimal_ci_high": 0.9365118243243243
+ },
+ "token_mean|scienceworld->scienceworld|three|mean|h3|layer29": {
+  "balanced_accuracy": 0.9537675606641124,
+  "n_test": 238.0,
+  "ci_low": 0.9242886134923605,
+  "ci_high": 0.9761168268150612,
+  "minimal_balanced_accuracy": 0.8847222222222223,
+  "minimal_n_test": 47.0,
+  "minimal_ci_low": 0.7274436090225564,
+  "minimal_ci_high": 0.9583333333333333
+ },
+ "shuffled|scienceworld->scienceworld|three|last|h3|layer29": {
+  "balanced_accuracy": 0.3259259259259259,
+  "n_test": 238.0,
+  "ci_low": 0.2845108289024392,
+  "ci_high": 0.4780020940415,
+  "minimal_balanced_accuracy": 0.2513888888888889,
+  "minimal_n_test": 47.0,
+  "minimal_ci_low": 0.17272212790039615,
+  "minimal_ci_high": 0.4897378211152882
+ },
+ "control|scienceworld->scienceworld|three|last|h3|layer29": {
+  "balanced_accuracy": 0.9844049247606019,
+  "n_test": 238.0,
+  "ci_low": 0.9682824783123822,
+  "ci_high": 0.9963777855695807,
+  "minimal_balanced_accuracy": 1.0,
+  "minimal_n_test": 47.0,
+  "minimal_ci_low": 1.0,
+  "minimal_ci_high": 1.0
+ },
+ "minimal_only|scienceworld->scienceworld|three|last|h3|layer29": {
+  "balanced_accuracy": 0.5914431673052362,
+  "n_test": 238.0,
+  "ci_low": 0.3607493244744874,
+  "ci_high": 0.725477758715214,
+  "minimal_balanced_accuracy": 0.8847222222222223,
+  "minimal_n_test": 47.0,
+  "minimal_ci_low": 0.7229542042042043,
+  "minimal_ci_high": 0.9583333333333334
+ },
+ "main|all->all|binary|last|h3|layer29": {
+  "balanced_accuracy": 0.9564199641752158,
+  "n_test": 454.0,
+  "ci_low": 0.9341537327447492,
+  "ci_high": 0.9749956830878619,
+  "minimal_balanced_accuracy": 0.961473138464289,
+  "minimal_n_test": 212.0,
+  "minimal_ci_low": 0.9339622641509434,
+  "minimal_ci_high": 0.9858923008455719
+ },
+ "main|all->all|three|last|h3|layer29": {
+  "balanced_accuracy": 0.9200374531835207,
+  "n_test": 544.0,
+  "ci_low": 0.8942085469980703,
+  "ci_high": 0.9438697595747291,
+  "minimal_balanced_accuracy": 0.9256556291954522,
+  "minimal_n_test": 296.0,
+  "minimal_ci_low": 0.8936295364599238,
+  "minimal_ci_high": 0.9556057011402403
+ },
+ "transfer|sandbox->scienceworld|binary|last|h3|layer29": {
+  "balanced_accuracy": 0.5306513409961685,
+  "n_test": 235.0,
+  "ci_low": 0.5005671266233767,
+  "ci_high": 0.5657168915456355,
+  "minimal_balanced_accuracy": 0.5,
+  "minimal_n_test": 46.0,
+  "minimal_ci_low": 0.5,
+  "minimal_ci_high": 0.5
+ },
+ "transfer|scienceworld->sandbox|binary|last|h3|layer29": {
+  "balanced_accuracy": 0.5296668979875087,
+  "n_test": 219.0,
+  "ci_low": 0.4733363309352518,
+  "ci_high": 0.585134272566047,
+  "minimal_balanced_accuracy": 0.4939759036144578,
+  "minimal_n_test": 166.0,
+  "minimal_ci_low": 0.4328078510390859,
+  "minimal_ci_high": 0.5553606819735336
+ },
+ "transfer|sandbox->scienceworld|three|last|h3|layer29": {
+  "balanced_accuracy": 0.29310344827586204,
+  "n_test": 238.0,
+  "ci_low": 0.06178517093252193,
+  "ci_high": 0.42267254998878745,
+  "minimal_balanced_accuracy": 0.022222222222222223,
+  "minimal_n_test": 47.0,
+  "minimal_ci_low": 0.0,
+  "minimal_ci_high": 0.07142857142857142
+ },
+ "transfer|scienceworld->sandbox|three|last|h3|layer29": {
+  "balanced_accuracy": 0.3654291001619246,
+  "n_test": 306.0,
+  "ci_low": 0.3214083622928193,
+  "ci_high": 0.40989369453888774,
+  "minimal_balanced_accuracy": 0.32931726907630526,
+  "minimal_n_test": 249.0,
+  "minimal_ci_low": 0.2809918044267553,
+  "minimal_ci_high": 0.3791514482081492
+ },
+ "horizon|scienceworld->scienceworld|binary|last|h1|layer29": {
+  "balanced_accuracy": 0.9531135531135531,
+  "n_test": 235.0,
+  "ci_low": 0.9251404338403201,
+  "ci_high": 0.9782430945179109,
+  "minimal_balanced_accuracy": 0.936105476673428,
+  "minimal_n_test": 46.0,
+  "minimal_ci_low": 0.8473108275739855,
+  "minimal_ci_high": 1.0
+ },
+ "horizon|scienceworld->scienceworld|three|last|h1|layer29": {
+  "balanced_accuracy": 0.9604395604395605,
+  "n_test": 238.0,
+  "ci_low": 0.93477289172935,
+  "ci_high": 0.9795186307519641,
+  "minimal_balanced_accuracy": 0.9574036511156186,
+  "minimal_n_test": 47.0,
+  "minimal_ci_low": 0.8754212269585253,
+  "minimal_ci_high": 1.0
+ },
+ "horizon|scienceworld->scienceworld|binary|last|h2|layer29": {
+  "balanced_accuracy": 0.955886670581327,
+  "n_test": 235.0,
+  "ci_low": 0.9305753280980116,
+  "ci_high": 0.9789182917117151,
+  "minimal_balanced_accuracy": 0.936105476673428,
+  "minimal_n_test": 46.0,
+  "minimal_ci_low": 0.8473108275739855,
+  "minimal_ci_high": 1.0
+ },
+ "horizon|scienceworld->scienceworld|three|last|h2|layer29": {
+  "balanced_accuracy": 0.9655020551967116,
+  "n_test": 238.0,
+  "ci_low": 0.9417989743892315,
+  "ci_high": 0.9833809779882066,
+  "minimal_balanced_accuracy": 0.9574036511156186,
+  "minimal_n_test": 47.0,
+  "minimal_ci_low": 0.8754212269585253,
+  "minimal_ci_high": 1.0
+ },
+ "lexical|sandbox|binary": {
+  "balanced_accuracy": 0.6641221374045801,
+  "n_test": 219.0,
+  "ci_low": 0.6258522727272727,
+  "ci_high": 0.7050457308571748
+ },
+ "lexical_minimal|sandbox|binary": {
+  "balanced_accuracy": 0.5,
+  "n_test": 166.0,
+  "ci_low": 0.5,
+  "ci_high": 0.5
+ },
+ "majority|sandbox|binary": {
+  "balanced_accuracy": 0.5,
+  "n_test": 219.0,
+  "ci_low": 0.5,
+  "ci_high": 0.5
+ },
+ "lexical|sandbox|three": {
+  "balanced_accuracy": 0.45633220863544627,
+  "n_test": 306.0,
+  "ci_low": 0.40201946439626074,
+  "ci_high": 0.5109484894389938
+ },
+ "lexical_minimal|sandbox|three": {
+  "balanced_accuracy": 0.3333333333333333,
+  "n_test": 249.0,
+  "ci_low": 0.281224398091868,
+  "ci_high": 0.3834705816004265
+ },
+ "majority|sandbox|three": {
+  "balanced_accuracy": 0.3333333333333333,
+  "n_test": 306.0,
+  "ci_low": 0.3333333333333333,
+  "ci_high": 0.3333333333333333
+ },
+ "lexical|scienceworld|binary": {
+  "balanced_accuracy": 0.860727969348659,
+  "n_test": 235.0,
+  "ci_low": 0.8132947076690482,
+  "ci_high": 0.9067338962775634
+ },
+ "lexical_minimal|scienceworld|binary": {
+  "balanced_accuracy": 0.6354166666666667,
+  "n_test": 46.0,
+  "ci_low": 0.49598214285714287,
+  "ci_high": 0.7790215773809525
+ },
+ "majority|scienceworld|binary": {
+  "balanced_accuracy": 0.5,
+  "n_test": 235.0,
+  "ci_low": 0.5,
+  "ci_high": 0.5
+ },
+ "lexical|scienceworld|three": {
+  "balanced_accuracy": 0.871264367816092,
+  "n_test": 238.0,
+  "ci_low": 0.8131069319745025,
+  "ci_high": 0.9083114246281204
+ },
+ "lexical_minimal|scienceworld|three": {
+  "balanced_accuracy": 0.7236111111111111,
+  "n_test": 47.0,
+  "ci_low": 0.461038961038961,
+  "ci_high": 0.8129211469534051
+ },
+ "majority|scienceworld|three": {
+  "balanced_accuracy": 0.3333333333333333,
+  "n_test": 238.0,
+  "ci_low": 0.3333333333333333,
+  "ci_high": 0.5
+ },
+ "lexical|all|binary": {
+  "balanced_accuracy": 0.7690929815990881,
+  "n_test": 454.0,
+  "ci_low": 0.7327966494612198,
+  "ci_high": 0.8026538775753663
+ },
+ "lexical_minimal|all|binary": {
+  "balanced_accuracy": 0.5683382497541789,
+  "n_test": 212.0,
+  "ci_low": 0.5176290516676134,
+  "ci_high": 0.613799146195302
+ },
+ "majority|all|binary": {
+  "balanced_accuracy": 0.5,
+  "n_test": 454.0,
+  "ci_low": 0.5,
+  "ci_high": 0.5
+ },
+ "lexical|all|three": {
+  "balanced_accuracy": 0.6751904322495431,
+  "n_test": 544.0,
+  "ci_low": 0.6402231800372623,
+  "ci_high": 0.7087100957865337
+ },
+ "lexical_minimal|all|three": {
+  "balanced_accuracy": 0.4287959664065859,
+  "n_test": 296.0,
+  "ci_low": 0.398611236925883,
+  "ci_high": 0.4594240240641388
+ },
+ "majority|all|three": {
+  "balanced_accuracy": 0.3333333333333333,
+  "n_test": 544.0,
+  "ci_low": 0.3333333333333333,
+  "ci_high": 0.3333333333333333
+ }
+}

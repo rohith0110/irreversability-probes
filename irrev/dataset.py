@@ -33,12 +33,12 @@ class Pair(TypedDict):
     labels_by_horizon: dict[str, str]
 
 
-PAIR_KEYS = set(Pair.__annotations__)
+PAIR_KEYS = tuple(Pair.__annotations__)  # ordered, so rebuilt files are byte-identical
 JsonValue = str | int | float | bool | None | list["JsonValue"] | dict[str, "JsonValue"]
 
 
 def is_pair(value: object) -> TypeGuard[Pair]:
-    return isinstance(value, dict) and PAIR_KEYS <= set(value) and value["label"] in LABELS
+    return isinstance(value, dict) and set(PAIR_KEYS) <= set(value) and value["label"] in LABELS
 
 
 def read_pairs(path: Path) -> list[Pair]:
@@ -88,8 +88,12 @@ def build(sandbox_path: Path, sw_paths: list[Path], out: Path) -> list[Pair]:
                 if not is_pair(value):
                     raise ValueError(f"bad row in {path}: {line[:120]}")
                 rows.append(value)
+    unique: list[Pair] = []
     seen: set[str] = set()
-    unique = [r for r in rows if not (r["id"] in seen or seen.add(r["id"]))]
+    for row in rows:
+        if row["id"] not in seen:
+            seen.add(row["id"])
+            unique.append(row)
     add_scienceworld_minimal_groups(unique)
     out.parent.mkdir(parents=True, exist_ok=True)
     with out.open("w", encoding="utf-8") as f:

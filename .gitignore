@@ -35,3 +35,18 @@ ADNN Irreversibility Project Execution Plan and Agent Handoff.md
 .env
 .vscode/
 .idea/
+
+# hidden states of the ToolEmu pairs (large, regenerable)
+results/**/toolemu_hidden/*.npy
+# RQ5 model I/O contains ByteSized32 game states (no licence; never redistributed).
+# results/<model>/rq5/scores.jsonl keeps the per-transition scores without any game text.
+results/**/rq5/nll.jsonl
+
+# LaTeX build output (main.pdf is kept as the submitted report)
+report/*.aux
+report/*.bbl
+report/*.blg
+report/*.fdb_latexmk
+report/*.fls
+report/*.log
+report/*.out

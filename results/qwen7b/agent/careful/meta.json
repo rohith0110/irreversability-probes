@@ -1,0 +1,17 @@
+{
+  "model": "Qwen/Qwen2.5-7B-Instruct",
+  "gpu": "NVIDIA L40S",
+  "driver": "610.57.04",
+  "cuda": "13.2",
+  "torch": "2.15.0+cu132",
+  "transformers": "5.22.1",
+  "python": "3.11.12",
+  "platform": "Linux-4.19.0-gvisor-x86_64-with-glibc2.36",
+  "host": "modal",
+  "style": "careful",
+  "strength": "0.0",
+  "hidden_index": "0",
+  "direction": "None",
+  "max_steps": "15",
+  "max_new_tokens": "200"
+}

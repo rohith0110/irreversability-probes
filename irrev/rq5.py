@@ -32,7 +32,9 @@ from dataclasses import asdict, dataclass
 from multiprocessing import get_context
 from pathlib import Path
 from types import ModuleType
-from typing import Protocol, TypedDict
+from typing import Protocol, TypedDict, TypeGuard
+
+from irrev.prompts import Message  # stdlib-only module, safe for the Python 3.12+ labelling run
 
 GAME_DIR = Path("data/external/bytesized32/src/data/games")
 PLAYTHROUGH_DIR = Path("data/external/bytesized32/src/data/playthroughs")
@@ -83,6 +85,23 @@ class StateObject(TypedDict):
     type: str
     properties: dict[str, JsonValue]
     contains: list[str]
+
+
+def is_state_object(value: JsonValue) -> TypeGuard[StateObject]:
+    return (isinstance(value, dict) and isinstance(value.get("name"), str) and isinstance(value.get("type"), str)
+            and isinstance(value.get("properties"), dict) and isinstance(value.get("contains"), list))
+
+
+def state_objects(value: JsonValue) -> list[StateObject]:
+    """Validate a ByteSized32 object list at the boundary where it is read from JSON."""
+    if not isinstance(value, list):
+        raise ValueError("game state is not a list of objects")
+    objects: list[StateObject] = []
+    for item in value:
+        if not is_state_object(item):
+            raise ValueError(f"malformed game object: {str(item)[:120]}")
+        objects.append(item)
+    return objects
 
 
 class Record(TypedDict):
@@ -163,10 +182,10 @@ class Snapshot:
     def __init__(self, module: ModuleType, game: TextGame) -> None:
         self.module = module
         self.game = copy.deepcopy(game)
-        self.uuid = module.UUID
+        self.uuid = int(getattr(module, "UUID"))  # game modules keep a global object counter
 
     def resume(self) -> TextGame:
-        self.module.UUID = self.uuid
+        setattr(self.module, "UUID", self.uuid)
         game: TextGame = copy.deepcopy(self.game)
         game.generatePossibleActions()
         return game
@@ -295,7 +314,7 @@ def label_game(args: tuple[str, list[Record]]) -> tuple[str, list[Transition], d
 
 def label_game_records(name: str, records: list[Record]) -> tuple[str, list[Transition], dict[str, int]]:
     module = load_game(name)
-    module.UUID = 0
+    setattr(module, "UUID", 0)
     game: TextGame = module.TextGame(randomSeed=module.randomSeed)
     game.generatePossibleActions()
     prefixes: dict[str, tuple[int, Snapshot]] = {}
@@ -309,7 +328,7 @@ def label_game_records(name: str, records: list[Record]) -> tuple[str, list[Tran
     out: list[Transition] = []
     stats: Counter[str] = Counter()
     for rec in records:
-        objs: list[StateObject] = rec["current_state"]["objects"]
+        objs = state_objects(rec["current_state"]["objects"])
         key = json.dumps(normalise(objs), sort_keys=True)
         if key not in prefixes:
             stats["unmatched_prefix"] += 1
@@ -322,7 +341,7 @@ def label_game_records(name: str, records: list[Record]) -> tuple[str, list[Tran
             continue
         depth_full, depth_struct, restore, nodes, truncated = result
         by_h = {str(h): label_at(depth_full, depth_struct, h) for h in (1, 2, 3)}
-        nxt: list[StateObject] = rec["tick_state"]["objects"]
+        nxt = state_objects(rec["tick_state"]["objects"])
         out.append(Transition(
             id=f"bs32-{name}-{rec['state_id']}", game=name, state_id=int(rec["state_id"]), prefix_len=prefix_len,
             action=action, task=str(rec["current_state"]["taskDesc"]),
@@ -359,7 +378,7 @@ SYSTEM_PROMPT = ("You simulate a text-based game. Given the current game state a
 MAX_NEW_TOKENS = 640
 
 
-def rq5_messages(row: dict[str, JsonValue]) -> list[dict[str, str]]:
+def rq5_messages(row: dict[str, JsonValue]) -> list[Message]:
     user = (f"Task: {row['task']}\nCurrent state:\n{row['current_objects']}\nAction: {row['action']}\n\n"
             "Output only a JSON list of the objects whose properties or contents change, in the same format "
             "as above. Output [] if nothing changes.")
@@ -370,8 +389,10 @@ def canonical_change(objs: list[dict[str, JsonValue]]) -> list[str]:
     out = []
     for obj in objs:
         obj = dict(obj)
-        if isinstance(obj.get("contains"), list):
-            obj["contains"] = sorted(str(c) for c in obj["contains"])
+        contains = obj.get("contains")
+        if isinstance(contains, list):
+            ordered: list[JsonValue] = [*sorted(str(c) for c in contains)]
+            obj["contains"] = ordered
         out.append(json.dumps(obj, sort_keys=True))
     return sorted(out)
 
@@ -392,7 +413,10 @@ def cmd_nll(model_name: str, in_path: Path, out_path: Path, max_tokens: int, max
     """Greedy prediction NLL (primary) and gold-change NLL (secondary) per transition."""
     import torch
 
-    from irrev.models import device, length_batches, load, render, run_metadata
+    from transformers import GenerationMixin
+    from transformers.generation.utils import GenerateDecoderOnlyOutput
+
+    from irrev.models import device, length_batches, load, render, run_metadata, split_on_oom
 
     rows = [json.loads(line) for line in in_path.read_text(encoding="utf-8").splitlines() if line]
     rows = rows[:limit] if limit else rows
@@ -413,27 +437,29 @@ def cmd_nll(model_name: str, in_path: Path, out_path: Path, max_tokens: int, max
     eos_ids = {int(configured)} if isinstance(configured, int) else {int(i) for i in (configured or [])}
     eos_ids.add(int(tok.eos_token_id))
 
+    if not isinstance(model, GenerationMixin):  # every AutoModelForCausalLM is one
+        raise TypeError(f"{type(model).__name__} cannot generate text")
+    generator = model
+
     def predict(idx: list[int]) -> list[tuple[str, float, int]]:
-        try:
-            enc = tok([prompts[i] for i in idx], return_tensors="pt", padding=True, add_special_tokens=False).to(device())
-            with torch.no_grad():
-                out = model.generate(**enc, max_new_tokens=MAX_NEW_TOKENS, do_sample=False, temperature=None, top_p=None,
+        enc = tok([prompts[i] for i in idx], return_tensors="pt", padding=True, add_special_tokens=False).to(device())
+        with torch.no_grad():
+            out = generator.generate(**enc, max_new_tokens=MAX_NEW_TOKENS, do_sample=False, temperature=None, top_p=None,
                                      top_k=None, pad_token_id=tok.pad_token_id, output_logits=True,
                                      return_dict_in_generate=True)
-        except torch.OutOfMemoryError:
-            if len(idx) == 1:
-                raise
-            torch.cuda.empty_cache()
-            half = len(idx) // 2
-            return predict(idx[:half]) + predict(idx[half:])
+        if not isinstance(out, GenerateDecoderOnlyOutput) or out.logits is None:
+            raise TypeError("generate did not return per-step logits")
         new = out.sequences[:, enc["input_ids"].shape[1]:]
         logprobs = torch.stack([torch.log_softmax(step.float(), dim=-1).gather(1, new[:, t:t + 1]).squeeze(1)
                                 for t, step in enumerate(out.logits)], dim=1)
-        results = []
+        results: list[tuple[str, float, int]] = []
         for b in range(len(idx)):
             tokens = new[b].tolist()
             end = next((t + 1 for t, x in enumerate(tokens) if x in eos_ids), len(tokens))
-            results.append((tok.decode(tokens[:end], skip_special_tokens=True, clean_up_tokenization_spaces=False), float(-logprobs[b, :end].mean()), end))
+            text = tok.decode(tokens[:end], skip_special_tokens=True, clean_up_tokenization_spaces=False)
+            if not isinstance(text, str):
+                raise TypeError("decode did not return text")
+            results.append((text, float(-logprobs[b, :end].mean()), end))
         return results
 
     def gold_nll(i: int) -> float:
@@ -452,7 +478,7 @@ def cmd_nll(model_name: str, in_path: Path, out_path: Path, max_tokens: int, max
     batches = length_batches(lengths, max_tokens, max_batch)
     with out_path.open("a", encoding="utf-8") as f:
         for n, idx in enumerate(batches, 1):
-            for i, (text, nll, n_tokens) in zip(idx, predict(idx)):
+            for i, (text, nll, n_tokens) in zip(idx, split_on_oom(idx, predict)):
                 f.write(json.dumps({"id": rows[i]["id"], "game": rows[i]["game"], "label": rows[i]["label"],
                                     "labels_by_horizon": rows[i]["labels_by_horizon"], "prompt": prompts[i],
                                     "prediction": text, "prediction_nll": nll, "prediction_tokens": n_tokens,
@@ -470,6 +496,10 @@ def cmd_analyze(nll_path: Path, out_path: Path) -> None:
     from irrev.stats import bootstrap_ci
 
     rows = [json.loads(line) for line in nll_path.read_text(encoding="utf-8").splitlines() if line]
+    # Scores without prompts or predicted states: ByteSized32 text has no licence and is never released.
+    score_keys = ("id", "game", "label", "labels_by_horizon", "prediction_nll", "gold_nll", "prediction_tokens", "exact_match")
+    (out_path.parent / "scores.jsonl").write_text(
+        "".join(json.dumps({k: r[k] for k in score_keys}) + "\n" for r in rows), encoding="utf-8")
     report: dict[str, JsonValue] = {"n": len(rows), "exact_match_rate": float(np.mean([r["exact_match"] for r in rows]))}
     for horizon in ("1", "2", "3"):
         sub = [r for r in rows if r["labels_by_horizon"][horizon] in ("reversible", "irreversible")]

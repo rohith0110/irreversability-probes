@@ -1,0 +1,12 @@
+{
+  "model": "meta-llama/Llama-3.1-8B-Instruct",
+  "gpu": "NVIDIA L40S",
+  "driver": "610.57.04",
+  "cuda": "13.2",
+  "torch": "2.15.0+cu132",
+  "transformers": "5.22.1",
+  "python": "3.11.12",
+  "platform": "Linux-4.19.0-gvisor-x86_64-with-glibc2.36",
+  "host": "modal",
+  "max_new_tokens": "10"
+}

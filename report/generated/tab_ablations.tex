@@ -1,0 +1,26 @@
+\begin{table}[t]
+\centering\small\setlength{\tabcolsep}{3pt}
+\resizebox{\columnwidth}{!}{\begin{tabular}{lccc}
+\toprule
+Ablation & Qwen2.5-7B & Llama-3.1-8B & Qwen2.5-14B \\
+\midrule
+Main probe, sandbox (binary) & 0.984$\pm$0.010 & 0.981$\pm$0.005 & 0.990$\pm$0.009 \\
+Token position: mean over action tokens & 0.983$\pm$0.005 & 0.988$\pm$0.005 & 0.996$\pm$0.006 \\
+Train on minimal pairs only & 0.854$\pm$0.023 & 0.897$\pm$0.010 & 0.863$\pm$0.017 \\
+Main probe, ScienceWorld (binary) & 0.945$\pm$0.006 & 0.942$\pm$0.013 & 0.942$\pm$0.007 \\
+ScienceWorld, train on minimal pairs only & 0.582$\pm$0.015 & 0.584$\pm$0.037 & 0.567$\pm$0.002 \\
+Transfer sandbox $\rightarrow$ ScienceWorld & 0.475$\pm$0.003 & 0.541$\pm$0.038 & 0.540$\pm$0.008 \\
+Transfer ScienceWorld $\rightarrow$ sandbox & 0.500$\pm$0.000 & 0.496$\pm$0.006 & 0.537$\pm$0.013 \\
+Horizon 1 labels (ScienceWorld) & 0.957$\pm$0.010 & 0.947$\pm$0.012 & 0.958$\pm$0.007 \\
+Horizon 2 labels (ScienceWorld) & 0.964$\pm$0.005 & 0.950$\pm$0.010 & 0.962$\pm$0.008 \\
+Horizon 3 labels (ScienceWorld) & 0.945$\pm$0.006 & 0.942$\pm$0.013 & 0.942$\pm$0.007 \\
+Three classes, sandbox & 0.936$\pm$0.009 & 0.910$\pm$0.004 & 0.936$\pm$0.007 \\
+Three classes, both environments & 0.906$\pm$0.013 & 0.903$\pm$0.010 & 0.914$\pm$0.010 \\
+\midrule
+Caution (irrev.\ version), neutral prompt & 0.22 & 0.32 & 0.02 \\
+Caution (irrev.\ version), careful prompt & 0.22 & 0.70 & 0.05 \\
+\bottomrule
+\end{tabular}}
+\caption{Ablations (brief \S7.3). Probe rows: binary balanced accuracy at each model's selected layer, mean$\pm$sd over three splits; minimal-pair-only probes are tested on all test rows. The last two rows are the strict caution rate in the irreversible task versions under the neutral and the careful system prompt; the model-size ablation is the Qwen2.5-7B versus Qwen2.5-14B column pair.}
+\label{tab:ablations}
+\end{table}

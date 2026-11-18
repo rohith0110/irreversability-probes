@@ -1,0 +1,14 @@
+\begin{table}[t]
+\centering\small\setlength{\tabcolsep}{3pt}
+\resizebox{\columnwidth}{!}{\begin{tabular}{lccccc}
+\toprule
+Model & Probe bal.\ acc.\ [CI] & AUROC & Lexical & Stated acc. & $\kappa$ stated--probe \\
+\midrule
+Qwen2.5-7B & 0.80 [0.72, 0.87] & 0.89 & 0.50 & 0.58 & 0.18 \\
+Llama-3.1-8B & 0.76 [0.67, 0.84] & 0.84 & 0.50 & 0.45 & 0.06 \\
+Qwen2.5-14B & 0.81 [0.74, 0.89] & 0.91 & 0.50 & 0.58 & 0.30 \\
+\bottomrule
+\end{tabular}}
+\caption{External test on 108 pairs from 54 ToolEmu curated cases rebuilt in the sandbox (binary, balanced classes). The probe and the lexical baseline are trained on all sandbox pairs and never see ToolEmu data; the probe uses each model's selected layer.}
+\label{tab:toolemu}
+\end{table}

@@ -1,0 +1,17 @@
+\begin{table*}[t]
+\centering\small\setlength{\tabcolsep}{4pt}
+\resizebox{\textwidth}{!}{\begin{tabular}{llccccccccc}
+\toprule
+Model & Prompt & Irrev.\ action & Caution (irrev.) & Over-caution (rev.) & Sensitivity (McNemar) & Success (irrev.) & $K$ & $A$ & Gap $K-A$ [95\% CI] & Parse fail. \\
+\midrule
+Qwen2.5-7B & neutral & 0.98 & 0.22 & 0.22 & 0.00 ($p=1$) & 0.92 & 0.20 & 0.00 & 0.20 [0.10, 0.30] & 20 \\
+ & careful & 1.00 & 0.22 & 0.22 & 0.00 ($p=1$) & 0.93 & 0.20 & 0.00 & 0.20 [0.10, 0.30] & 6 \\
+Llama-3.1-8B & neutral & 0.92 & 0.32 & 0.30 & 0.02 ($p=1$) & 0.93 & 0.27 & 0.17 & 0.10 [$-$0.07, 0.25] & 2 \\
+ & careful & 0.92 & 0.70 & 0.62 & 0.08 ($p=0.062$) & 0.97 & 0.27 & 0.23 & 0.03 [$-$0.12, 0.18] & 5 \\
+Qwen2.5-14B & neutral & 0.98 & 0.02 & 0.03 & $-$0.02 ($p=1$) & 0.95 & 0.67 & 0.02 & 0.65 [0.53, 0.78] & 1 \\
+ & careful & 0.98 & 0.05 & 0.05 & 0.00 ($p=1$) & 0.97 & 0.67 & 0.03 & 0.63 [0.52, 0.75] & 1 \\
+\bottomrule
+\end{tabular}}
+\caption{RQ3 behaviour on 60 task pairs (each run once per version, greedy decoding). Caution = checking settings, asking the user, making a backup or choosing the safer tool before the target action. Sensitivity = caution in the irreversible minus the reversible version, with an exact McNemar test on the paired outcomes. $K$ = fraction of pairs in which the model states that the irreversible version's action is irreversible and the reversible version's is not; $A$ = fraction in which the agent is more careful in the irreversible version; Gap = $K-A$ with a bootstrap CI over pairs. Parse failures are counted, never dropped.}
+\label{tab:behaviour}
+\end{table*}

@@ -1,0 +1,362 @@
+{
+ "sandbox|binary|seed0": {
+  "lexical": {
+   "balanced_accuracy": 0.6641221374045801,
+   "macro_f1": 0.5804597701149425,
+   "n": 219.0,
+   "auroc": 0.687673490631506
+  },
+  "lexical_minimal": {
+   "balanced_accuracy": 0.5,
+   "macro_f1": 0.3333333333333333,
+   "n": 166.0,
+   "auroc": 0.5
+  },
+  "majority": {
+   "balanced_accuracy": 0.5,
+   "macro_f1": 0.3742857142857143,
+   "n": 219.0,
+   "auroc": 0.5
+  }
+ },
+ "sandbox|binary|seed1": {
+  "lexical": {
+   "balanced_accuracy": 0.6937984496124031,
+   "macro_f1": 0.6181051191426291,
+   "n": 212.0,
+   "auroc": 0.7108900719155692
+  },
+  "lexical_minimal": {
+   "balanced_accuracy": 0.5,
+   "macro_f1": 0.3333333333333333,
+   "n": 152.0,
+   "auroc": 0.49999999999999994
+  },
+  "majority": {
+   "balanced_accuracy": 0.5,
+   "macro_f1": 0.3782991202346041,
+   "n": 212.0,
+   "auroc": 0.5
+  }
+ },
+ "sandbox|binary|seed2": {
+  "lexical": {
+   "balanced_accuracy": 0.648,
+   "macro_f1": 0.5666303558460422,
+   "n": 217.0,
+   "auroc": 0.6694347826086956
+  },
+  "lexical_minimal": {
+   "balanced_accuracy": 0.5,
+   "macro_f1": 0.3333333333333333,
+   "n": 170.0,
+   "auroc": 0.5
+  },
+  "majority": {
+   "balanced_accuracy": 0.5,
+   "macro_f1": 0.3654970760233918,
+   "n": 217.0,
+   "auroc": 0.5
+  }
+ },
+ "sandbox|three|seed0": {
+  "lexical": {
+   "balanced_accuracy": 0.45633220863544627,
+   "macro_f1": 0.44083195578470763,
+   "n": 306.0,
+   "auroc": 0.643135183719764
+  },
+  "lexical_minimal": {
+   "balanced_accuracy": 0.3333333333333333,
+   "macro_f1": 0.2650826381728997,
+   "n": 249.0,
+   "auroc": 0.5
+  },
+  "majority": {
+   "balanced_accuracy": 0.3333333333333333,
+   "macro_f1": 0.19984744469870327,
+   "n": 306.0,
+   "auroc": 0.5
+  }
+ },
+ "sandbox|three|seed1": {
+  "lexical": {
+   "balanced_accuracy": 0.4777933439183089,
+   "macro_f1": 0.46507409039735553,
+   "n": 292.0,
+   "auroc": 0.6535501826124154
+  },
+  "lexical_minimal": {
+   "balanced_accuracy": 0.3333333333333333,
+   "macro_f1": 0.265056648777579,
+   "n": 228.0,
+   "auroc": 0.5
+  },
+  "majority": {
+   "balanced_accuracy": 0.3333333333333333,
+   "macro_f1": 0.20427553444180524,
+   "n": 292.0,
+   "auroc": 0.5
+  }
+ },
+ "sandbox|three|seed2": {
+  "lexical": {
+   "balanced_accuracy": 0.4404151472650771,
+   "macro_f1": 0.42136687647092624,
+   "n": 310.0,
+   "auroc": 0.6252271622863265
+  },
+  "lexical_minimal": {
+   "balanced_accuracy": 0.3333333333333333,
+   "macro_f1": 0.2564666947657628,
+   "n": 255.0,
+   "auroc": 0.5
+  },
+  "majority": {
+   "balanced_accuracy": 0.3333333333333333,
+   "macro_f1": 0.19157088122605362,
+   "n": 310.0,
+   "auroc": 0.5
+  }
+ },
+ "scienceworld|binary|seed0": {
+  "lexical": {
+   "balanced_accuracy": 0.860727969348659,
+   "macro_f1": 0.863752319109462,
+   "n": 235.0,
+   "auroc": 0.9288505747126437
+  },
+  "lexical_minimal": {
+   "balanced_accuracy": 0.6354166666666667,
+   "macro_f1": 0.640625,
+   "n": 46.0,
+   "auroc": 0.7031250000000001
+  },
+  "majority": {
+   "balanced_accuracy": 0.5,
+   "macro_f1": 0.3815789473684211,
+   "n": 235.0,
+   "auroc": 0.5
+  }
+ },
+ "scienceworld|binary|seed1": {
+  "lexical": {
+   "balanced_accuracy": 0.837492941840768,
+   "macro_f1": 0.8444444444444444,
+   "n": 192.0,
+   "auroc": 0.925296442687747
+  },
+  "lexical_minimal": {
+   "balanced_accuracy": 0.5694444444444444,
+   "macro_f1": 0.5548654244306418,
+   "n": 43.0,
+   "auroc": 0.65625
+  },
+  "majority": {
+   "balanced_accuracy": 0.5,
+   "macro_f1": 0.3745928338762215,
+   "n": 192.0,
+   "auroc": 0.5
+  }
+ },
+ "scienceworld|binary|seed2": {
+  "lexical": {
+   "balanced_accuracy": 0.871904761904762,
+   "macro_f1": 0.8686791630340018,
+   "n": 241.0,
+   "auroc": 0.9501098901098901
+  },
+  "lexical_minimal": {
+   "balanced_accuracy": 0.6904761904761905,
+   "macro_f1": 0.6703296703296704,
+   "n": 50.0,
+   "auroc": 0.7504761904761904
+  },
+  "majority": {
+   "balanced_accuracy": 0.5,
+   "macro_f1": 0.3836317135549872,
+   "n": 241.0,
+   "auroc": 0.5
+  }
+ },
+ "scienceworld|three|seed0": {
+  "lexical": {
+   "balanced_accuracy": 0.871264367816092,
+   "macro_f1": 0.642169023401968,
+   "n": 238.0,
+   "auroc": 0.9378658558802573
+  },
+  "lexical_minimal": {
+   "balanced_accuracy": 0.7236111111111111,
+   "macro_f1": 0.5404371584699453,
+   "n": 47.0,
+   "auroc": 0.7823384461311406
+  },
+  "majority": {
+   "balanced_accuracy": 0.3333333333333333,
+   "macro_f1": 0.2523933855526545,
+   "n": 238.0,
+   "auroc": 0.5
+  }
+ },
+ "scienceworld|three|seed1": {
+  "lexical": {
+   "balanced_accuracy": 0.7198193111236589,
+   "macro_f1": 0.653125441612888,
+   "n": 199.0,
+   "auroc": 0.8806648541725163
+  },
+  "lexical_minimal": {
+   "balanced_accuracy": 0.478395061728395,
+   "macro_f1": 0.4888586956521739,
+   "n": 46.0,
+   "auroc": 0.660711567085241
+  },
+  "majority": {
+   "balanced_accuracy": 0.3333333333333333,
+   "macro_f1": 0.2441613588110403,
+   "n": 199.0,
+   "auroc": 0.5
+  }
+ },
+ "scienceworld|three|seed2": {
+  "lexical": {
+   "balanced_accuracy": 0.784932844932845,
+   "macro_f1": 0.6958525345622121,
+   "n": 247.0,
+   "auroc": 0.9218290257263146
+  },
+  "lexical_minimal": {
+   "balanced_accuracy": 0.45396825396825397,
+   "macro_f1": 0.4365079365079365,
+   "n": 52.0,
+   "auroc": 0.7213056754233224
+  },
+  "majority": {
+   "balanced_accuracy": 0.3333333333333333,
+   "macro_f1": 0.2518891687657431,
+   "n": 247.0,
+   "auroc": 0.5
+  }
+ },
+ "all|binary|seed0": {
+  "lexical": {
+   "balanced_accuracy": 0.7690929815990881,
+   "macro_f1": 0.7418385944448495,
+   "n": 454.0,
+   "auroc": 0.8546653639472399
+  },
+  "lexical_minimal": {
+   "balanced_accuracy": 0.5683382497541789,
+   "macro_f1": 0.5077399380804953,
+   "n": 212.0,
+   "auroc": 0.5787968177348708
+  },
+  "majority": {
+   "balanced_accuracy": 0.5,
+   "macro_f1": 0.3780821917808219,
+   "n": 454.0,
+   "auroc": 0.5
+  }
+ },
+ "all|binary|seed1": {
+  "lexical": {
+   "balanced_accuracy": 0.760297131147541,
+   "macro_f1": 0.7347829021234301,
+   "n": 404.0,
+   "auroc": 0.848719262295082
+  },
+  "lexical_minimal": {
+   "balanced_accuracy": 0.5512874630645842,
+   "macro_f1": 0.4913869701051907,
+   "n": 195.0,
+   "auroc": 0.5644259181089067
+  },
+  "majority": {
+   "balanced_accuracy": 0.5,
+   "macro_f1": 0.3765432098765432,
+   "n": 404.0,
+   "auroc": 0.5
+  }
+ },
+ "all|binary|seed2": {
+  "lexical": {
+   "balanced_accuracy": 0.7671733730750124,
+   "macro_f1": 0.7421171171171171,
+   "n": 458.0,
+   "auroc": 0.8609140586189766
+  },
+  "lexical_minimal": {
+   "balanced_accuracy": 0.5783333333333334,
+   "macro_f1": 0.5176186573940776,
+   "n": 220.0,
+   "auroc": 0.5957916666666667
+  },
+  "majority": {
+   "balanced_accuracy": 0.5,
+   "macro_f1": 0.37517053206002726,
+   "n": 458.0,
+   "auroc": 0.5
+  }
+ },
+ "all|three|seed0": {
+  "lexical": {
+   "balanced_accuracy": 0.6751904322495431,
+   "macro_f1": 0.6003081109772691,
+   "n": 544.0,
+   "auroc": 0.8189486935331992
+  },
+  "lexical_minimal": {
+   "balanced_accuracy": 0.4287959664065859,
+   "macro_f1": 0.3196170643451442,
+   "n": 296.0,
+   "auroc": 0.5811199602689247
+  },
+  "majority": {
+   "balanced_accuracy": 0.3333333333333333,
+   "macro_f1": 0.22439024390243903,
+   "n": 544.0,
+   "auroc": 0.5
+  }
+ },
+ "all|three|seed1": {
+  "lexical": {
+   "balanced_accuracy": 0.6405298034043088,
+   "macro_f1": 0.5769737304475633,
+   "n": 491.0,
+   "auroc": 0.8007029070730032
+  },
+  "lexical_minimal": {
+   "balanced_accuracy": 0.4122415411441385,
+   "macro_f1": 0.309829479110646,
+   "n": 274.0,
+   "auroc": 0.5681706937284371
+  },
+  "majority": {
+   "balanced_accuracy": 0.3333333333333333,
+   "macro_f1": 0.22131519274376418,
+   "n": 491.0,
+   "auroc": 0.5
+  }
+ },
+ "all|three|seed2": {
+  "lexical": {
+   "balanced_accuracy": 0.673197549263123,
+   "macro_f1": 0.6059233658124706,
+   "n": 557.0,
+   "auroc": 0.8203168708379506
+  },
+  "lexical_minimal": {
+   "balanced_accuracy": 0.42844827586206896,
+   "macro_f1": 0.330896686159844,
+   "n": 307.0,
+   "auroc": 0.5901881620093102
+  },
+  "majority": {
+   "balanced_accuracy": 0.3333333333333333,
+   "macro_f1": 0.2203525641025641,
+   "n": 557.0,
+   "auroc": 0.5
+  }
+ }
+}

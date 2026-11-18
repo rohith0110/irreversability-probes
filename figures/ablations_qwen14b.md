@@ -1,0 +1,32 @@
+| experiment | train -> test | task | position | horizon | bal. acc. (mean ± sd) | minimal-pair bal. acc. |
+|---|---|---|---|---|---|---|
+| control | sandbox->sandbox | binary | last | h3 | 1.000 ± 0.000 | 1.000 |
+| control | sandbox->sandbox | three | last | h3 | 1.000 ± 0.000 | 1.000 |
+| control | scienceworld->scienceworld | binary | last | h3 | 0.994 ± 0.003 | 1.000 |
+| control | scienceworld->scienceworld | three | last | h3 | 0.986 ± 0.002 | 1.000 |
+| horizon | scienceworld->scienceworld | binary | last | h1 | 0.958 ± 0.007 | 0.935 |
+| horizon | scienceworld->scienceworld | binary | last | h2 | 0.962 ± 0.008 | 0.935 |
+| horizon | scienceworld->scienceworld | three | last | h1 | 0.861 ± 0.071 | 0.776 |
+| horizon | scienceworld->scienceworld | three | last | h2 | 0.861 ± 0.075 | 0.767 |
+| main | all->all | binary | last | h3 | 0.953 ± 0.012 | 0.949 |
+| main | all->all | three | last | h3 | 0.914 ± 0.010 | 0.915 |
+| main | sandbox->sandbox | binary | last | h3 | 0.990 ± 0.009 | 0.987 |
+| main | sandbox->sandbox | three | last | h3 | 0.936 ± 0.007 | 0.926 |
+| main | scienceworld->scienceworld | binary | last | h3 | 0.942 ± 0.007 | 0.808 |
+| main | scienceworld->scienceworld | three | last | h3 | 0.850 ± 0.069 | 0.684 |
+| minimal_only | sandbox->sandbox | binary | last | h3 | 0.863 ± 0.017 | 0.981 |
+| minimal_only | sandbox->sandbox | three | last | h3 | 0.824 ± 0.019 | 0.933 |
+| minimal_only | scienceworld->scienceworld | binary | last | h3 | 0.567 ± 0.002 | 0.824 |
+| minimal_only | scienceworld->scienceworld | three | last | h3 | 0.493 ± 0.073 | 0.697 |
+| shuffled | sandbox->sandbox | binary | last | h3 | 0.507 ± 0.030 | 0.522 |
+| shuffled | sandbox->sandbox | three | last | h3 | 0.335 ± 0.002 | 0.345 |
+| shuffled | scienceworld->scienceworld | binary | last | h3 | 0.530 ± 0.027 | 0.495 |
+| shuffled | scienceworld->scienceworld | three | last | h3 | 0.353 ± 0.036 | 0.288 |
+| token_mean | sandbox->sandbox | binary | mean | h3 | 0.996 ± 0.006 | 0.996 |
+| token_mean | sandbox->sandbox | three | mean | h3 | 0.971 ± 0.009 | 0.972 |
+| token_mean | scienceworld->scienceworld | binary | mean | h3 | 0.941 ± 0.008 | 0.842 |
+| token_mean | scienceworld->scienceworld | three | mean | h3 | 0.864 ± 0.065 | 0.706 |
+| transfer | sandbox->scienceworld | binary | last | h3 | 0.540 ± 0.008 | 0.510 |
+| transfer | sandbox->scienceworld | three | last | h3 | 0.312 ± 0.095 | 0.161 |
+| transfer | scienceworld->sandbox | binary | last | h3 | 0.537 ± 0.013 | 0.500 |
+| transfer | scienceworld->sandbox | three | last | h3 | 0.369 ± 0.014 | 0.334 |

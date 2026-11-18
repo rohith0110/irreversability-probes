@@ -245,3 +245,14 @@ def all_tasks() -> list[Task]:
              + _send_announcement() + _reply_customer() + _pay_invoice() + _reimburse())
     assert len(tasks) == 60 and len({t.id for t in tasks}) == 60
     return tasks
+
+
+def tasks_in(task_set: str) -> list[Task]:
+    """The 60 main tasks, or the ToolEmu cases run in the sandbox (imported lazily: irrev.toolemu imports this module)."""
+    if task_set == "toolemu":
+        from irrev.toolemu import toolemu_tasks
+
+        return toolemu_tasks()
+    if task_set != "main":
+        raise ValueError(f"unknown task set {task_set!r}")
+    return all_tasks()

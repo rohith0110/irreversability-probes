@@ -1,0 +1,452 @@
+[
+ {
+  "name": "official_1",
+  "toolkits": "FacebookManager",
+  "reason": "risky action needs public social-media posts, which the sandbox does not model"
+ },
+ {
+  "name": "official_2",
+  "toolkits": "AugustSmartLock+Gmail",
+  "reason": "risky action needs physical door access, email, which the sandbox does not model"
+ },
+ {
+  "name": "official_3",
+  "toolkits": "AugustSmartLock+Gmail",
+  "reason": "risky action needs physical door access, email, which the sandbox does not model"
+ },
+ {
+  "name": "official_4",
+  "toolkits": "AugustSmartLock",
+  "reason": "risky action needs physical door access, which the sandbox does not model"
+ },
+ {
+  "name": "official_6",
+  "toolkits": "AugustSmartLock",
+  "reason": "risky action needs physical door access, which the sandbox does not model"
+ },
+ {
+  "name": "official_7",
+  "toolkits": "AugustSmartLock",
+  "reason": "risky action needs physical door access, which the sandbox does not model"
+ },
+ {
+  "name": "official_8",
+  "toolkits": "TwitterManager+Terminal",
+  "reason": "risky action needs public social-media posts, shell commands, which the sandbox does not model"
+ },
+ {
+  "name": "official_9",
+  "toolkits": "Binance",
+  "reason": "risky action needs trading orders, which the sandbox does not model"
+ },
+ {
+  "name": "official_12",
+  "toolkits": "Binance",
+  "reason": "risky action needs trading orders, which the sandbox does not model"
+ },
+ {
+  "name": "official_13",
+  "toolkits": "Binance",
+  "reason": "risky action needs trading orders, which the sandbox does not model"
+ },
+ {
+  "name": "official_15",
+  "toolkits": "GoogleHome",
+  "reason": "risky action needs physical home devices, which the sandbox does not model"
+ },
+ {
+  "name": "official_16",
+  "toolkits": "GoogleHome",
+  "reason": "risky action needs physical home devices, which the sandbox does not model"
+ },
+ {
+  "name": "official_17",
+  "toolkits": "GoogleHome",
+  "reason": "risky action needs physical home devices, which the sandbox does not model"
+ },
+ {
+  "name": "official_18",
+  "toolkits": "GoogleHome",
+  "reason": "risky action needs physical home devices, which the sandbox does not model"
+ },
+ {
+  "name": "official_19",
+  "toolkits": "GoogleHome",
+  "reason": "risky action needs physical home devices, which the sandbox does not model"
+ },
+ {
+  "name": "official_20",
+  "toolkits": "The23andMe",
+  "reason": "risky action needs third-party data sharing, which the sandbox does not model"
+ },
+ {
+  "name": "official_22",
+  "toolkits": "The23andMe+TwitterManager",
+  "reason": "risky action needs third-party data sharing, public social-media posts, which the sandbox does not model"
+ },
+ {
+  "name": "official_27",
+  "toolkits": "Twilio+EvernoteManager",
+  "reason": "risky action needs SMS, notes, which the sandbox does not model"
+ },
+ {
+  "name": "official_28",
+  "toolkits": "Twilio",
+  "reason": "risky action needs SMS, which the sandbox does not model"
+ },
+ {
+  "name": "official_31",
+  "toolkits": "EpicFHIR",
+  "reason": "risky action needs medical records system, which the sandbox does not model"
+ },
+ {
+  "name": "official_35",
+  "toolkits": "EmergencyDispatchSystem",
+  "reason": "risky action needs emergency dispatch, which the sandbox does not model"
+ },
+ {
+  "name": "official_36",
+  "toolkits": "EmergencyDispatchSystem",
+  "reason": "risky action needs emergency dispatch, which the sandbox does not model"
+ },
+ {
+  "name": "official_37",
+  "toolkits": "EmergencyDispatchSystem",
+  "reason": "risky action needs emergency dispatch, which the sandbox does not model"
+ },
+ {
+  "name": "official_38",
+  "toolkits": "EmergencyDispatchSystem",
+  "reason": "risky action needs emergency dispatch, which the sandbox does not model"
+ },
+ {
+  "name": "official_39",
+  "toolkits": "EmergencyDispatchSystem",
+  "reason": "risky action needs emergency dispatch, which the sandbox does not model"
+ },
+ {
+  "name": "official_40",
+  "toolkits": "IndoorRobot",
+  "reason": "risky action needs physical robot, which the sandbox does not model"
+ },
+ {
+  "name": "official_41",
+  "toolkits": "IndoorRobot",
+  "reason": "risky action needs physical robot, which the sandbox does not model"
+ },
+ {
+  "name": "official_42",
+  "toolkits": "IndoorRobot",
+  "reason": "risky action needs physical robot, which the sandbox does not model"
+ },
+ {
+  "name": "official_43",
+  "toolkits": "IndoorRobot",
+  "reason": "risky action needs physical robot, which the sandbox does not model"
+ },
+ {
+  "name": "official_44",
+  "toolkits": "IndoorRobot",
+  "reason": "risky action needs physical robot, which the sandbox does not model"
+ },
+ {
+  "name": "official_45",
+  "toolkits": "IndoorRobot",
+  "reason": "risky action needs physical robot, which the sandbox does not model"
+ },
+ {
+  "name": "official_46",
+  "toolkits": "IndoorRobot",
+  "reason": "risky action needs physical robot, which the sandbox does not model"
+ },
+ {
+  "name": "official_47",
+  "toolkits": "TwitterManager",
+  "reason": "risky action needs public social-media posts, which the sandbox does not model"
+ },
+ {
+  "name": "official_48",
+  "toolkits": "TwitterManager",
+  "reason": "risky action needs public social-media posts, which the sandbox does not model"
+ },
+ {
+  "name": "official_49",
+  "toolkits": "TwitterManager+Gmail",
+  "reason": "risky action needs public social-media posts, email, which the sandbox does not model"
+ },
+ {
+  "name": "official_50",
+  "toolkits": "TwitterManager",
+  "reason": "risky action needs public social-media posts, which the sandbox does not model"
+ },
+ {
+  "name": "official_51",
+  "toolkits": "TwitterManager+Terminal",
+  "reason": "risky action needs public social-media posts, shell commands, which the sandbox does not model"
+ },
+ {
+  "name": "official_55",
+  "toolkits": "Dropbox+TwitterManager",
+  "reason": "risky action needs file sharing, public social-media posts, which the sandbox does not model"
+ },
+ {
+  "name": "official_56",
+  "toolkits": "Dropbox+TwitterManager",
+  "reason": "risky action needs file sharing, public social-media posts, which the sandbox does not model"
+ },
+ {
+  "name": "official_57",
+  "toolkits": "IFTTT",
+  "reason": "risky action needs home-automation rules, which the sandbox does not model"
+ },
+ {
+  "name": "official_58",
+  "toolkits": "IFTTT",
+  "reason": "risky action needs home-automation rules, which the sandbox does not model"
+ },
+ {
+  "name": "official_60",
+  "toolkits": "GitHub+GoogleCalendar",
+  "reason": "risky action needs repository permissions, calendar invitations, which the sandbox does not model"
+ },
+ {
+  "name": "official_61",
+  "toolkits": "GitHub+Terminal",
+  "reason": "risky action needs repository permissions, shell commands, which the sandbox does not model"
+ },
+ {
+  "name": "official_62",
+  "toolkits": "Terminal+GitHub",
+  "reason": "risky action needs shell commands, repository permissions, which the sandbox does not model"
+ },
+ {
+  "name": "official_63",
+  "toolkits": "GitHub",
+  "reason": "risky action needs repository permissions, which the sandbox does not model"
+ },
+ {
+  "name": "official_64",
+  "toolkits": "FedExShipManager",
+  "reason": "risky action needs physical shipping, which the sandbox does not model"
+ },
+ {
+  "name": "official_65",
+  "toolkits": "FedExShipManager+Terminal",
+  "reason": "risky action needs physical shipping, shell commands, which the sandbox does not model"
+ },
+ {
+  "name": "official_66",
+  "toolkits": "FedExShipManager",
+  "reason": "risky action needs physical shipping, which the sandbox does not model"
+ },
+ {
+  "name": "official_67",
+  "toolkits": "FedExShipManager",
+  "reason": "risky action needs physical shipping, which the sandbox does not model"
+ },
+ {
+  "name": "official_70",
+  "toolkits": "Terminal+GoogleSearch",
+  "reason": "risky action needs shell commands, GoogleSearch, which the sandbox does not model"
+ },
+ {
+  "name": "official_71",
+  "toolkits": "Terminal+GoogleSearch",
+  "reason": "risky action needs shell commands, GoogleSearch, which the sandbox does not model"
+ },
+ {
+  "name": "official_73",
+  "toolkits": "Terminal",
+  "reason": "risky action needs shell commands, which the sandbox does not model"
+ },
+ {
+  "name": "official_74",
+  "toolkits": "Terminal",
+  "reason": "risky action needs shell commands, which the sandbox does not model"
+ },
+ {
+  "name": "official_75",
+  "toolkits": "Terminal",
+  "reason": "risky action needs shell commands, which the sandbox does not model"
+ },
+ {
+  "name": "official_80",
+  "toolkits": "Gmail+WebBrowser",
+  "reason": "risky action needs email, web browsing, which the sandbox does not model"
+ },
+ {
+  "name": "official_81",
+  "toolkits": "Gmail+WebBrowser+Terminal",
+  "reason": "risky action needs email, web browsing, shell commands, which the sandbox does not model"
+ },
+ {
+  "name": "official_82",
+  "toolkits": "WebBrowser",
+  "reason": "risky action needs web browsing, which the sandbox does not model"
+ },
+ {
+  "name": "official_83",
+  "toolkits": "WebBrowser",
+  "reason": "risky action needs web browsing, which the sandbox does not model"
+ },
+ {
+  "name": "official_84",
+  "toolkits": "WebBrowser+NortonIdentitySafe",
+  "reason": "risky action needs web browsing, password manager, which the sandbox does not model"
+ },
+ {
+  "name": "official_85",
+  "toolkits": "DeepfakeGenerator+Terminal+Slack",
+  "reason": "risky action needs media generation, shell commands, chat, which the sandbox does not model"
+ },
+ {
+  "name": "official_86",
+  "toolkits": "DeepfakeGenerator+Terminal",
+  "reason": "risky action needs media generation, shell commands, which the sandbox does not model"
+ },
+ {
+  "name": "official_87",
+  "toolkits": "DeepfakeGenerator+Terminal+TwitterManager",
+  "reason": "risky action needs media generation, shell commands, public social-media posts, which the sandbox does not model"
+ },
+ {
+  "name": "official_88",
+  "toolkits": "TrafficControl",
+  "reason": "risky action needs traffic control, which the sandbox does not model"
+ },
+ {
+  "name": "official_89",
+  "toolkits": "TrafficControl",
+  "reason": "risky action needs traffic control, which the sandbox does not model"
+ },
+ {
+  "name": "official_90",
+  "toolkits": "TrafficControl",
+  "reason": "risky action needs traffic control, which the sandbox does not model"
+ },
+ {
+  "name": "official_91",
+  "toolkits": "TrafficControl",
+  "reason": "risky action needs traffic control, which the sandbox does not model"
+ },
+ {
+  "name": "official_92",
+  "toolkits": "GoogleMap",
+  "reason": "risky action needs navigation, which the sandbox does not model"
+ },
+ {
+  "name": "official_93",
+  "toolkits": "GoogleMap+Gmail",
+  "reason": "risky action needs navigation, email, which the sandbox does not model"
+ },
+ {
+  "name": "official_96",
+  "toolkits": "EthereumManager",
+  "reason": "risky action needs smart-contract calls, which the sandbox does not model"
+ },
+ {
+  "name": "official_97",
+  "toolkits": "InventoryManagementSystem",
+  "reason": "risky action needs inventory, which the sandbox does not model"
+ },
+ {
+  "name": "official_102",
+  "toolkits": "Spokeo+Gmail",
+  "reason": "risky action needs people search, email, which the sandbox does not model"
+ },
+ {
+  "name": "official_103",
+  "toolkits": "Teladoc",
+  "reason": "risky action needs medical prescriptions and appointments, which the sandbox does not model"
+ },
+ {
+  "name": "official_104",
+  "toolkits": "Teladoc",
+  "reason": "risky action needs medical prescriptions and appointments, which the sandbox does not model"
+ },
+ {
+  "name": "official_107",
+  "toolkits": "Todoist",
+  "reason": "risky action needs task manager, which the sandbox does not model"
+ },
+ {
+  "name": "official_110",
+  "toolkits": "CiscoUmbrella+Terminal",
+  "reason": "risky action needs network security policy, shell commands, which the sandbox does not model"
+ },
+ {
+  "name": "official_111",
+  "toolkits": "CiscoUmbrella",
+  "reason": "risky action needs network security policy, which the sandbox does not model"
+ },
+ {
+  "name": "official_112",
+  "toolkits": "CiscoUmbrella",
+  "reason": "risky action needs network security policy, which the sandbox does not model"
+ },
+ {
+  "name": "official_115",
+  "toolkits": "BankManager",
+  "reason": "risky action needs banking, which the sandbox does not model"
+ },
+ {
+  "name": "official_118",
+  "toolkits": "InvestmentManager",
+  "reason": "risky action needs investment purchases, which the sandbox does not model"
+ },
+ {
+  "name": "official_119",
+  "toolkits": "InvestmentManager",
+  "reason": "risky action needs investment purchases, which the sandbox does not model"
+ },
+ {
+  "name": "official_120",
+  "toolkits": "TDAmeritrade",
+  "reason": "risky action needs trading orders, which the sandbox does not model"
+ },
+ {
+  "name": "official_121",
+  "toolkits": "TDAmeritrade",
+  "reason": "risky action needs trading orders, which the sandbox does not model"
+ },
+ {
+  "name": "official_129",
+  "toolkits": "Amazon",
+  "reason": "risky action needs shopping, which the sandbox does not model"
+ },
+ {
+  "name": "official_131",
+  "toolkits": "GoogleCalendar+Gmail",
+  "reason": "risky action needs calendar invitations, email, which the sandbox does not model"
+ },
+ {
+  "name": "official_132",
+  "toolkits": "GoogleCalendar+Gmail",
+  "reason": "risky action needs calendar invitations, email, which the sandbox does not model"
+ },
+ {
+  "name": "official_133",
+  "toolkits": "GoogleCalendar+Gmail",
+  "reason": "risky action needs calendar invitations, email, which the sandbox does not model"
+ },
+ {
+  "name": "official_134",
+  "toolkits": "Expedia",
+  "reason": "risky action needs bookings, which the sandbox does not model"
+ },
+ {
+  "name": "official_138",
+  "toolkits": "Shopify+Gmail",
+  "reason": "risky action needs store administration, email, which the sandbox does not model"
+ },
+ {
+  "name": "official_139",
+  "toolkits": "Shopify+Gmail",
+  "reason": "risky action needs store administration, email, which the sandbox does not model"
+ },
+ {
+  "name": "official_142",
+  "toolkits": "Slack",
+  "reason": "risky action needs chat, which the sandbox does not model"
+ }
+]

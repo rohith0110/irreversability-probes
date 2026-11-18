@@ -11,6 +11,7 @@ are committed every two minutes, because Modal GPUs are preemptible.
 from __future__ import annotations
 
 import os
+import shutil
 import subprocess
 import sys
 import threading
@@ -74,6 +75,11 @@ PLANS: dict[str, list[list[str]]] = {
         ["-m", "irrev.agent", "--model", "qwen7b", "--out", f"{RESMOKE2_ROOT}/steer", "--probe-dir",
          f"{RESMOKE2_ROOT}/probes", "--tasks", *STEER_TASKS, "--max-tokens", "16000", "--calibrate"],
     ],
+    # the node's own queue on the final data, limited to the jobs that depend on data/pairs.jsonl
+    "queuecheck": [
+        ["-m", "irrev.run_queue", "qwen", "--only", "gpu_check", "hidden", "select_layer", "stated"],
+        ["-c", "import shutil; shutil.copytree('logs/qwen', 'results/modal/queuecheck_logs', dirs_exist_ok=True)"],
+    ],
     "rq5smoke": [
         ["-m", "irrev.rq5", "nll", "--model", "qwen7b", "--limit", "64", "--out", "results/modal/rq5smoke_qwen7b/nll.jsonl"],
         ["-m", "irrev.rq5", "analyze", "--nll", "results/modal/rq5smoke_qwen7b/nll.jsonl",
@@ -104,7 +110,60 @@ def run_plan(plan: str) -> list[str]:
     return report
 
 
+FINAL_ROOT = "/vol/final"
+
+
+@app.function(gpu="L40S", image=image, volumes={"/cache": cache, "/vol": results},
+              secrets=[modal.Secret.from_name("adnn-hf")], timeout=12 * 3600, retries=3)
+def run_node_queue(queue: str) -> None:
+    """The node queue itself (irrev.run_queue) writing to final/ on the volume; a retry resumes from checkpoints.
+
+    ``queue`` is a plan name, optionally with ``:job+job`` to run only those jobs (e.g. ``llama:steering``).
+    """
+    plan, _, only = queue.partition(":")
+    os.chdir("/root/adnn")
+    os.makedirs(f"{FINAL_ROOT}/results", exist_ok=True)
+    os.makedirs(f"{FINAL_ROOT}/logs", exist_ok=True)
+    for name in ("results", "logs"):
+        if not os.path.exists(name):
+            os.symlink(f"{FINAL_ROOT}/{name}", name)
+    stop = threading.Event()
+    threading.Thread(target=_commit_loop, args=(stop,), daemon=True).start()
+    only_args = ["--only", *only.split("+")] if only else []
+    subprocess.run([sys.executable, "-m", "irrev.run_queue", plan, *only_args], check=False)
+    stop.set()
+    results.commit()
+    cache.commit()
+
+
+@app.function(cpu=32, memory=65536, image=image, volumes={"/vol": results}, timeout=4 * 3600)
+def run_analysis(commands: list[list[str]]) -> None:
+    """CPU-only analysis (python -m irrev.<...>) on the results already in final/ on the volume."""
+    os.chdir("/root/adnn")
+    if not os.path.exists("results"):
+        os.symlink(f"{FINAL_ROOT}/results", "results")
+    for argv in commands:
+        start = time.time()
+        if "--hidden" in argv:  # memory-mapped reads over the network volume are very slow; use local disk
+            i = argv.index("--hidden") + 1
+            local = f"/tmp/{argv[i]}"
+            if not os.path.exists(local):
+                shutil.copytree(argv[i], local)
+            argv = [*argv[:i], local, *argv[i + 1:]]
+        # one BLAS thread per joblib worker: 32 workers x 32 threads each thrash the CPU
+        single = {name: "1" for name in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS")}
+        code = subprocess.run([sys.executable, "-m", *argv], check=False, env=os.environ | single).returncode
+        print(f"exit {code} in {(time.time() - start) / 60:.1f} min: {' '.join(argv[:3])}", flush=True)
+        results.commit()
+
+
 @app.local_entrypoint()
-def main(plan: str = "smoke7b") -> None:
+def main(plan: str = "smoke7b", queues: str = "", analysis: str = "") -> None:
+    if analysis:
+        run_analysis.remote([command.split() for command in analysis.split(";")])
+        return
+    if queues:
+        list(run_node_queue.map(queues.split(",")))
+        return
     for line in run_plan.remote(plan):
         print(line)

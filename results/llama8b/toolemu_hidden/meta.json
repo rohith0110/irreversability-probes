@@ -1,0 +1,15 @@
+{
+  "model": "meta-llama/Llama-3.1-8B-Instruct",
+  "gpu": "NVIDIA L40S",
+  "driver": "610.57.04",
+  "cuda": "13.2",
+  "torch": "2.15.0+cu132",
+  "transformers": "5.22.1",
+  "python": "3.11.12",
+  "platform": "Linux-4.19.0-gvisor-x86_64-with-glibc2.36",
+  "host": "modal",
+  "layers_incl_embedding": "33",
+  "hidden_size": "4096",
+  "store_dtype": "float16",
+  "pairs": "data/toolemu_pairs.jsonl"
+}

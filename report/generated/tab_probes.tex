@@ -1,0 +1,25 @@
+\begin{table*}[t]
+\centering\small\setlength{\tabcolsep}{3.2pt}
+\resizebox{\textwidth}{!}{\begin{tabular}{llllcccccccccc}
+\toprule
+Model & Layer & Env. & Cl. & Probe bal.\ acc. & 95\% CI & Minimal pairs & Layer 0 & Lexical & Lex.\ (min.) & Shuffled & Control & Select. & AUROC \\
+\midrule
+Qwen2.5-7B & 20/28 & Sandbox & 2 & 0.984$\pm$0.010 & [0.98, 1.00] & 0.979 & 0.537 & 0.664 & 0.500 & 0.509 & 1.000 & $-$0.016 & 0.999 \\
+ &  &  & 3 & 0.936$\pm$0.009 & [0.92, 0.97] & 0.930 & 0.358 & 0.456 & 0.333 & 0.338 & 1.000 & $-$0.064 & 0.986 \\
+ &  & ScienceWorld & 2 & 0.945$\pm$0.006 & [0.91, 0.97] & 0.863 & 0.700 & 0.861 & 0.635 & 0.535 & 0.994 & $-$0.050 & 0.975 \\
+ &  &  & 3 & 0.868$\pm$0.067 & [0.93, 0.98] & 0.710 & 0.633 & 0.871 & 0.724 & 0.342 & 0.989 & $-$0.120 & 0.953 \\
+\midrule
+Llama-3.1-8B & 10/32 & Sandbox & 2 & 0.981$\pm$0.005 & [0.97, 1.00] & 0.975 & 0.537 & 0.664 & 0.500 & 0.524 & 1.000 & $-$0.019 & 0.997 \\
+ &  &  & 3 & 0.910$\pm$0.004 & [0.87, 0.94] & 0.903 & 0.358 & 0.456 & 0.333 & 0.324 & 1.000 & $-$0.090 & 0.983 \\
+ &  & ScienceWorld & 2 & 0.942$\pm$0.013 & [0.92, 0.97] & 0.861 & 0.702 & 0.861 & 0.635 & 0.529 & 0.994 & $-$0.052 & 0.971 \\
+ &  &  & 3 & 0.849$\pm$0.070 & [0.91, 0.97] & 0.729 & 0.633 & 0.871 & 0.724 & 0.350 & 0.987 & $-$0.138 & 0.941 \\
+\midrule
+Qwen2.5-14B & 29/48 & Sandbox & 2 & 0.990$\pm$0.009 & [0.98, 1.00] & 0.987 & 0.537 & 0.664 & 0.500 & 0.507 & 1.000 & $-$0.010 & 1.000 \\
+ &  &  & 3 & 0.936$\pm$0.007 & [0.90, 0.96] & 0.926 & 0.358 & 0.456 & 0.333 & 0.335 & 1.000 & $-$0.064 & 0.993 \\
+ &  & ScienceWorld & 2 & 0.942$\pm$0.007 & [0.91, 0.97] & 0.808 & 0.703 & 0.861 & 0.635 & 0.530 & 0.994 & $-$0.052 & 0.976 \\
+ &  &  & 3 & 0.850$\pm$0.069 & [0.92, 0.97] & 0.684 & 0.634 & 0.871 & 0.724 & 0.353 & 0.986 & $-$0.136 & 0.957 \\
+\bottomrule
+\end{tabular}}
+\caption{RQ1 probes at the layer chosen on validation data (index among decoder outputs). Balanced accuracy, mean$\pm$sd over three scenario splits; 95\% bootstrap CI on the seed-0 test split. Lexical = bag-of-words on the action text; Lex.\ (min.) = the same on minimal-pair test rows, where the action text cannot separate the classes. Control = Hewitt--Liang control task (random fixed label per verb); Select.\ = probe minus control. Majority-class balanced accuracy is 0.500 (binary) and 0.333 (three classes) by definition. Test sizes: sandbox {\TestNSandboxBinary} (binary) and {\TestNSandboxThree} (three-class) pairs, ScienceWorld {\TestNScienceWorldBinary} and {\TestNScienceWorldThree}.}
+\label{tab:probes}
+\end{table*}

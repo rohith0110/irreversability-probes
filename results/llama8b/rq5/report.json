@@ -1,0 +1,77 @@
+{
+ "n": 776,
+ "exact_match_rate": 0.0,
+ "h1_prediction_nll": {
+  "auroc": 0.5304181053953282,
+  "ci_low": 0.49064190810657093,
+  "ci_high": 0.5721466794684967,
+  "n_irreversible": 397,
+  "n_reversible": 329,
+  "mean_irreversible": 0.09687406956323749,
+  "mean_reversible": 0.09640103716708968,
+  "mann_whitney_p": 0.15789297294568982,
+  "within_game_auroc_mean": 0.6205891191349424,
+  "games_with_both_classes": 25
+ },
+ "h1_gold_nll": {
+  "auroc": 0.4876160872194958,
+  "ci_low": 0.44760604752805205,
+  "ci_high": 0.5276747095166636,
+  "n_irreversible": 397,
+  "n_reversible": 329,
+  "mean_irreversible": 0.16816765839416975,
+  "mean_reversible": 0.14743453157799585,
+  "mann_whitney_p": 0.5654054194817103,
+  "within_game_auroc_mean": 0.45240759669733727,
+  "games_with_both_classes": 25
+ },
+ "h2_prediction_nll": {
+  "auroc": 0.5275356755780347,
+  "ci_low": 0.48381881947966954,
+  "ci_high": 0.5703299621107308,
+  "n_irreversible": 384,
+  "n_reversible": 346,
+  "mean_irreversible": 0.09676626974639173,
+  "mean_reversible": 0.09633719633640236,
+  "mann_whitney_p": 0.19851425532208378,
+  "within_game_auroc_mean": 0.6041332394519526,
+  "games_with_both_classes": 25
+ },
+ "h2_gold_nll": {
+  "auroc": 0.5029127528901733,
+  "ci_low": 0.4581158003075213,
+  "ci_high": 0.5414229667013295,
+  "n_irreversible": 384,
+  "n_reversible": 346,
+  "mean_irreversible": 0.17033388349227607,
+  "mean_reversible": 0.14619097572272224,
+  "mann_whitney_p": 0.8919353444259139,
+  "within_game_auroc_mean": 0.4512929722496286,
+  "games_with_both_classes": 25
+ },
+ "h3_prediction_nll": {
+  "auroc": 0.5286720246647509,
+  "ci_low": 0.48762416765385536,
+  "ci_high": 0.5702396075469186,
+  "n_irreversible": 384,
+  "n_reversible": 348,
+  "mean_irreversible": 0.09676626974639173,
+  "mean_reversible": 0.09624988062243009,
+  "mann_whitney_p": 0.17995365507074967,
+  "within_game_auroc_mean": 0.6045327117670771,
+  "games_with_both_classes": 25
+ },
+ "h3_gold_nll": {
+  "auroc": 0.50209530651341,
+  "ci_low": 0.4612992837314997,
+  "ci_high": 0.5441100306122444,
+  "n_irreversible": 384,
+  "n_reversible": 348,
+  "mean_irreversible": 0.17033388349227607,
+  "mean_reversible": 0.14631521990843888,
+  "mann_whitney_p": 0.922068482986308,
+  "within_game_auroc_mean": 0.45080066455732093,
+  "games_with_both_classes": 25
+ },
+ "partially_reversible_prediction_nll_mean": 0.14017167805948041
+}

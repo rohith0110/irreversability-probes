@@ -1,0 +1,51 @@
+{
+ "strengths": [
+  0.0,
+  -1.5,
+  1.5,
+  -3.0,
+  3.0,
+  -4.5,
+  4.5,
+  -6.0,
+  6.0
+ ],
+ "s_max": 6.0,
+ "calibration": [
+  {
+   "candidate": 2.0,
+   "parse_failure_rates": [
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "candidate": 4.0,
+   "parse_failure_rates": [
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "candidate": 6.0,
+   "parse_failure_rates": [
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "candidate": 8.0,
+   "parse_failure_rates": [
+    0.022727272727272728,
+    0.49166666666666664
+   ]
+  }
+ ],
+ "tasks": [
+  "free_space_00",
+  "update_config_00",
+  "send_announcement_00",
+  "pay_invoice_00"
+ ],
+ "max_parse_failure_rate": 0.1
+}

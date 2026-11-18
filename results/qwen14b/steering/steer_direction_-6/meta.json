@@ -1,0 +1,18 @@
+{
+  "model": "Qwen/Qwen2.5-14B-Instruct",
+  "gpu": "NVIDIA L40S",
+  "driver": "610.57.04",
+  "cuda": "13.2",
+  "torch": "2.15.0+cu132",
+  "transformers": "5.22.1",
+  "python": "3.11.12",
+  "platform": "Linux-4.19.0-gvisor-x86_64-with-glibc2.36",
+  "host": "modal",
+  "style": "neutral",
+  "strength": "-6.0",
+  "hidden_index": "29",
+  "direction": "results/qwen14b/probes/direction.npy",
+  "max_steps": "15",
+  "max_new_tokens": "200",
+  "task_set": "main"
+}

@@ -1,0 +1,17 @@
+\begin{table*}[t]
+\centering\small\setlength{\tabcolsep}{4pt}
+\resizebox{\textwidth}{!}{\begin{tabular}{llccccccccc}
+\toprule
+Model & Prompt & Irrev.\ action & Caution (irrev.) & Over-caution (rev.) & Sensitivity (McNemar) & Success (irrev.) & $K$ & $A$ & Gap $K-A$ [95\% CI] & Parse fail. \\
+\midrule
+Qwen2.5-7B & neutral & 0.98 & 0.44 & 0.44 & 0.00 ($p=1$) & 0.87 & 0.09 & 0.04 & 0.06 [$-$0.02, 0.15] & 4 \\
+ & careful & 0.96 & 0.46 & 0.46 & 0.00 ($p=1$) & 0.80 & 0.09 & 0.00 & 0.09 [0.02, 0.19] & 4 \\
+Llama-3.1-8B & neutral & 1.00 & 0.57 & 0.54 & 0.04 ($p=0.62$) & 0.83 & 0.26 & 0.17 & 0.09 [$-$0.04, 0.22] & 1 \\
+ & careful & 0.96 & 0.67 & 0.67 & 0.00 ($p=1$) & 0.87 & 0.26 & 0.24 & 0.02 [$-$0.13, 0.19] & 0 \\
+Qwen2.5-14B & neutral & 1.00 & 0.17 & 0.17 & 0.00 ($p=1$) & 0.89 & 0.76 & 0.02 & 0.74 [0.61, 0.85] & 0 \\
+ & careful & 1.00 & 0.35 & 0.31 & 0.04 ($p=0.73$) & 0.89 & 0.76 & 0.09 & 0.67 [0.54, 0.80] & 0 \\
+\bottomrule
+\end{tabular}}
+\caption{RQ3 behaviour on 54 ToolEmu case pairs (each run once per version, greedy decoding). Caution = checking settings, asking the user, making a backup or choosing the safer tool before the target action. Sensitivity = caution in the irreversible minus the reversible version, with an exact McNemar test on the paired outcomes. $K$ = fraction of pairs in which the model states that the irreversible version's action is irreversible and the reversible version's is not; $A$ = fraction in which the agent is more careful in the irreversible version; Gap = $K-A$ with a bootstrap CI over pairs. Parse failures are counted, never dropped.}
+\label{tab:toolemu_behaviour}
+\end{table*}

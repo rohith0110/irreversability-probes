@@ -27,3 +27,12 @@ def test_option_order_counterbalanced() -> None:
     assert rev.index("- irreversible:") < rev.index("- reversible:")
     flips = [reverse_order(f"id{i}") for i in range(400)]
     assert 150 < sum(flips) < 250
+
+
+def test_toolemu_pairs_use_the_sandbox_prompts() -> None:
+    """ToolEmu cases run inside the sandbox; a ScienceWorld prompt here would corrupt their hidden states."""
+    from irrev.prompts import pair_messages, stated_messages
+
+    assert pair_messages("toolemu", "s", "t") == pair_messages("sandbox", "s", "t")
+    assert stated_messages("toolemu", "s", "t", "a") == stated_messages("sandbox", "s", "t", "a")
+    assert pair_messages("scienceworld", "s", "t") != pair_messages("sandbox", "s", "t")

@@ -6,16 +6,19 @@ import os
 import platform
 import subprocess
 import sys
+from collections.abc import Callable
+from typing import TypeVar
 
 import torch
 import transformers
-from transformers import AutoModelForCausalLM, AutoTokenizer, PreTrainedModel, PreTrainedTokenizerBase
+from transformers import AutoModelForCausalLM, AutoTokenizer, GenerationMixin, PreTrainedModel, PreTrainedTokenizerBase
 
 from irrev.prompts import Message
 
 MODEL_ALIASES = {
     "qwen7b": "Qwen/Qwen2.5-7B-Instruct",
     "llama8b": "meta-llama/Llama-3.1-8B-Instruct",
+    "qwen14b": "Qwen/Qwen2.5-14B-Instruct",
     "qwen0.5b": "Qwen/Qwen2.5-0.5B-Instruct",
     "llama1b": "meta-llama/Llama-3.2-1B-Instruct",
 }
@@ -42,16 +45,38 @@ def load(name: str) -> tuple[PreTrainedModel, PreTrainedTokenizerBase]:
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
     dtype = torch.bfloat16 if torch.cuda.is_available() else torch.float32
-    model = AutoModelForCausalLM.from_pretrained(repo, dtype=dtype).to(device()).eval()
+    model = AutoModelForCausalLM.from_pretrained(repo, dtype=dtype)
+    # In place; PreTrainedModel.to is typed through functools.wraps, which mypy cannot bind.
+    # from_pretrained already puts the model in evaluation mode (dropout off).
+    torch.nn.Module.to(model, device())
     return model, tokenizer
+
+
+Item = TypeVar("Item")
+Result = TypeVar("Result")
+
+
+def split_on_oom(items: list[Item], run: Callable[[list[Item]], list[Result]]) -> list[Result]:
+    """Run a batch; on CUDA out-of-memory split it in half and retry, down to single items."""
+    try:
+        return run(items)
+    except torch.OutOfMemoryError:
+        if len(items) == 1:
+            raise
+        torch.cuda.empty_cache()
+        half = len(items) // 2
+        print(f"OOM at batch {len(items)}; retrying as {half} + {len(items) - half}", flush=True)
+        return split_on_oom(items[:half], run) + split_on_oom(items[half:], run)
 
 
 def render(tokenizer: PreTrainedTokenizerBase, messages: list[Message]) -> str:
     """Chat-template text ending with the assistant header, ready for generation or an action."""
     # Llama 3 templates stamp today's date into the system prompt; pin the template's own
     # default so prompts are identical on every day and machine (ignored by other templates).
-    text: str = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True,
-                                              date_string=FIXED_DATE)
+    chat = [{"role": m["role"], "content": m["content"]} for m in messages]
+    text = tokenizer.apply_chat_template(chat, tokenize=False, add_generation_prompt=True, date_string=FIXED_DATE)
+    if not isinstance(text, str):
+        raise TypeError("apply_chat_template(tokenize=False) did not return text")
     return text
 
 
@@ -82,22 +107,22 @@ def generate(model: PreTrainedModel, tokenizer: PreTrainedTokenizerBase, prompts
 
     On CUDA out-of-memory the batch is split in half and retried, down to single prompts.
     """
-    try:
-        batch = tokenizer(prompts, return_tensors="pt", padding=True, add_special_tokens=False).to(device())
+    if not isinstance(model, GenerationMixin):  # every AutoModelForCausalLM is one
+        raise TypeError(f"{type(model).__name__} cannot generate text")
+    generator = model
+
+    def run(batch_prompts: list[str]) -> list[str]:
+        batch = tokenizer(batch_prompts, return_tensors="pt", padding=True, add_special_tokens=False).to(device())
         with torch.no_grad():
-            out = model.generate(**batch, max_new_tokens=max_new_tokens, do_sample=False, temperature=None,
-                                 top_p=None, top_k=None, pad_token_id=tokenizer.pad_token_id)
-    except torch.OutOfMemoryError:
-        if len(prompts) == 1:
-            raise
-        torch.cuda.empty_cache()
-        half = len(prompts) // 2
-        print(f"OOM at batch {len(prompts)}; retrying as {half} + {len(prompts) - half}", flush=True)
-        return (generate(model, tokenizer, prompts[:half], max_new_tokens)
-                + generate(model, tokenizer, prompts[half:], max_new_tokens))
-    new_tokens = out[:, batch["input_ids"].shape[1]:]
-    texts: list[str] = tokenizer.batch_decode(new_tokens, skip_special_tokens=True, clean_up_tokenization_spaces=False)
-    return texts
+            out = generator.generate(**batch, max_new_tokens=max_new_tokens, do_sample=False, temperature=None,
+                                     top_p=None, top_k=None, pad_token_id=tokenizer.pad_token_id)
+        if not isinstance(out, torch.Tensor):
+            raise TypeError("generate returned a structured output; expected token ids")
+        new_tokens = out[:, batch["input_ids"].shape[1]:]
+        texts: list[str] = tokenizer.batch_decode(new_tokens, skip_special_tokens=True, clean_up_tokenization_spaces=False)
+        return texts
+
+    return split_on_oom(prompts, run)
 
 
 def length_batches(lengths: list[int], max_tokens: int, max_batch: int) -> list[list[int]]:

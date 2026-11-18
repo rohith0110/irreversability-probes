@@ -14,7 +14,10 @@ import random
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
-from irrev.sandbox import INTERNAL_DOMAIN, FileEntry, Label, Sandbox, Settings, State, ToolCall
+from irrev.sandbox import INTERNAL_DOMAIN, EmailMode, FileEntry, Label, Sandbox, Settings, State, ToolCall, TransferMode
+
+EMAIL_MODE_FOR: dict[Label, EmailMode] = {"reversible": "undo_window", "partially_reversible": "recall_internal", "irreversible": "immediate"}
+TRANSFER_MODE_FOR: dict[Label, TransferMode] = {"reversible": "cancellable", "partially_reversible": "refund_with_fee", "irreversible": "final"}
 
 FILE_POOL = [
     ("q3_report.docx", "Q3 revenue grew 4 percent; churn fell to 2.1 percent."),
@@ -129,9 +132,9 @@ def variant_states(base: State, call: ToolCall, rng: random.Random) -> dict[Labe
             else:
                 s.edit_history = False
         elif call.tool == "send_email":
-            s.email_mode = {"reversible": "undo_window", "partially_reversible": "recall_internal", "irreversible": "immediate"}[label]
+            s.email_mode = EMAIL_MODE_FOR[label]
         elif call.tool == "transfer_money":
-            s.transfer_mode = {"reversible": "cancellable", "partially_reversible": "refund_with_fee", "irreversible": "final"}[label]
+            s.transfer_mode = TRANSFER_MODE_FOR[label]
         out[label] = state
     return out
 

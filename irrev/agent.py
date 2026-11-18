@@ -15,7 +15,7 @@ import argparse
 import json
 import time
 import traceback
-from collections.abc import Iterator
+from collections.abc import Callable, Iterator
 from contextlib import contextmanager
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
@@ -27,7 +27,7 @@ from transformers import PreTrainedModel, PreTrainedTokenizerBase
 from irrev.models import device, generate, length_batches, load, render, run_metadata
 from irrev.prompts import Message, PromptStyle, agent_messages
 from irrev.sandbox import ArgValue, Sandbox, ToolCall
-from irrev.tasks import Task, Version, all_tasks
+from irrev.tasks import Task, Version, tasks_in
 
 MAX_STEPS = 15
 MAX_NEW_TOKENS = 200
@@ -145,12 +145,12 @@ def steering(model: PreTrainedModel, hidden_index: int, vector: torch.Tensor | N
 
 def run(model: PreTrainedModel, tokenizer: PreTrainedTokenizerBase, model_name: str, out_dir: Path,
         style: PromptStyle, task_ids: list[str] | None, max_tokens: int, max_batch: int,
-        direction_path: Path | None, hidden_index: int, strength: float) -> None:
+        direction_path: Path | None, hidden_index: int, strength: float, task_set: str = "main") -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
     if (out_dir / "summary.jsonl").exists():
         print(f"{out_dir} already complete")
         return
-    tasks = [t for t in all_tasks() if not task_ids or t.id in task_ids]
+    tasks = [t for t in tasks_in(task_set) if not task_ids or t.id in task_ids]
     episodes = [Episode(t, v, sb, agent_messages(t.instruction, sb.render(), style))
                 for t in tasks for v in ("reversible", "irreversible") for sb in [Sandbox(t.build(v))]]
     vector = None
@@ -159,7 +159,7 @@ def run(model: PreTrainedModel, tokenizer: PreTrainedTokenizerBase, model_name: 
         vector = direction * strength
     meta = run_metadata(model_name) | {"style": style, "strength": str(strength), "hidden_index": str(hidden_index),
                                        "direction": str(direction_path), "max_steps": str(MAX_STEPS),
-                                       "max_new_tokens": str(MAX_NEW_TOKENS)}
+                                       "max_new_tokens": str(MAX_NEW_TOKENS), "task_set": task_set}
     (out_dir / "meta.json").write_text(json.dumps(meta, indent=2))
 
     ckpt_path = out_dir / "checkpoint.json"
@@ -197,12 +197,19 @@ MAX_PARSE_FAILURE_RATE = 0.10
 
 
 def parse_failure_rate(out_dir: Path) -> float:
-    runs = [json.loads(line) for line in (out_dir / "summary.jsonl").read_text(encoding="utf-8").splitlines() if line]
-    return sum(r["parse_failures"] for r in runs) / max(1, sum(r["steps"] for r in runs))
+    failures = steps = 0
+    for line in (out_dir / "summary.jsonl").read_text(encoding="utf-8").splitlines():
+        if line:
+            run_summary = json.loads(line)
+            failures += int(run_summary["parse_failures"])
+            steps += int(run_summary["steps"])
+    return failures / max(1, steps)
 
 
-def calibrate(model: PreTrainedModel, tokenizer: PreTrainedTokenizerBase, model_name: str, root: Path,
-              probe_dir: Path, hidden_index: int, max_tokens: int, max_batch: int) -> list[float]:
+CalibrationRun = Callable[[Path, float], None]  # (output directory, strength) -> runs CALIBRATION_TASKS
+
+
+def calibrate(run_at: CalibrationRun, root: Path, probe_dir: Path) -> list[float]:
     """Pre-registered rule: S = largest candidate whose +S and -S along the probe direction keep the
     parse-failure rate at or below 10% on four fixed tasks (only parse rates are used, never
     behaviour); strengths = 0, +-S/4, +-S/2, +-3S/4, +-S."""
@@ -214,8 +221,7 @@ def calibrate(model: PreTrainedModel, tokenizer: PreTrainedTokenizerBase, model_
         rates = []
         for strength in (candidate, -candidate):
             out = root / "calibration" / f"strength_{strength:+g}"
-            run(model, tokenizer, model_name, out, "neutral", CALIBRATION_TASKS, max_tokens, max_batch,
-                probe_dir / "direction.npy", hidden_index, strength)
+            run_at(out, strength)
             rates.append(parse_failure_rate(out))
         log.append({"candidate": candidate, "parse_failure_rates": rates})
         if max(rates) > MAX_PARSE_FAILURE_RATE:
@@ -235,6 +241,7 @@ def main() -> None:
     parser.add_argument("--out", type=Path, required=True, help="condition directory, or sweep root when steering")
     parser.add_argument("--style", choices=("neutral", "careful"), default="neutral")
     parser.add_argument("--tasks", nargs="*", default=None)
+    parser.add_argument("--task-set", choices=("main", "toolemu"), default="main")
     parser.add_argument("--max-tokens", type=int, default=24000)
     parser.add_argument("--max-batch", type=int, default=24)
     parser.add_argument("--probe-dir", type=Path, default=None, help="holds best_layer.json and the directions")
@@ -243,13 +250,19 @@ def main() -> None:
     args = parser.parse_args()
     model, tokenizer = load(args.model)
     if args.strengths is None and not args.calibrate:
-        run(model, tokenizer, args.model, args.out, args.style, args.tasks, args.max_tokens, args.max_batch, None, 0, 0.0)
+        run(model, tokenizer, args.model, args.out, args.style, args.tasks, args.max_tokens, args.max_batch, None, 0, 0.0,
+            args.task_set)
         return
     if args.probe_dir is None:
         parser.error("steering needs --probe-dir")
     hidden_index = int(json.loads((args.probe_dir / "best_layer.json").read_text())["hidden_index"])
-    strengths = args.strengths if args.strengths is not None else calibrate(
-        model, tokenizer, args.model, args.out, args.probe_dir, hidden_index, args.max_tokens, args.max_batch)
+    probe_dir: Path = args.probe_dir
+
+    def calibration_run(out: Path, strength: float) -> None:
+        run(model, tokenizer, args.model, out, "neutral", CALIBRATION_TASKS, args.max_tokens, args.max_batch,
+            probe_dir / "direction.npy", hidden_index, strength)
+
+    strengths = args.strengths if args.strengths is not None else calibrate(calibration_run, args.out, probe_dir)
     print(f"steering strengths: {strengths}", flush=True)
     failures: list[str] = []
     for strength in strengths:
@@ -259,7 +272,7 @@ def main() -> None:
             out = args.out / f"steer_{kind}_{strength:+g}"
             try:
                 run(model, tokenizer, args.model, out, args.style, args.tasks, args.max_tokens, args.max_batch,
-                    args.probe_dir / f"{kind}.npy", hidden_index, strength)
+                    args.probe_dir / f"{kind}.npy", hidden_index, strength, args.task_set)
             except Exception:  # isolate conditions: report every failure, then exit non-zero
                 failures.append(f"{out}:\n{traceback.format_exc()}")
                 print(failures[-1], flush=True)

@@ -15,7 +15,7 @@ import copy
 import itertools
 import random
 
-from irrev.sandbox import REFUND_FEE, Sandbox, State, ToolCall, world_view
+from irrev.sandbox import REFUND_FEE, ArgValue, Sandbox, State, ToolCall, world_view
 from irrev.sandbox_data import generate, random_state, variant_states, grouped_call
 
 RESTORE_TOOLS = ("restore_file", "restore_from_archive", "restore_backup", "restore_version")
@@ -143,7 +143,7 @@ def test_generated_dataset_is_mostly_minimal_and_balanced() -> None:
 def test_every_tool_survives_junk_arguments() -> None:
     from irrev.sandbox import TOOL_DESCRIPTIONS
 
-    junk_values = ["", "$1,250.00", "abc", "-5", "1e9", "missing.txt", '{"a": 1}', 3, 2.5, -1]
+    junk_values: list[ArgValue] = ["", "$1,250.00", "abc", "-5", "1e9", "missing.txt", '{"a": 1}', 3, 2.5, -1]
     rng = random.Random(11)
     for tool in TOOL_DESCRIPTIONS:
         for _ in range(30):

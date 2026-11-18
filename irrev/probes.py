@@ -40,6 +40,7 @@ TEST_FRACTION = 0.2
 VAL_FRACTION = 0.2
 C_VALUE = 1.0
 Setup = Literal["binary", "three"]
+SETUPS: tuple[Setup, ...] = ("binary", "three")
 Position = Literal["last", "mean"]
 Env = Literal["sandbox", "scienceworld", "all"]
 Kind = Literal["probe", "shuffled", "control"]
@@ -74,7 +75,9 @@ def load_data(pairs_path: Path, hidden_dir: Path) -> Data:
 
 
 def scenario_split(rows: list[Pair], seed: int) -> Split:
-    train, val, test = [], [], []
+    train: list[int] = []
+    val: list[int] = []
+    test: list[int] = []
     for env in sorted({r["environment"] for r in rows}):
         scenarios = sorted({r["scenario_id"] for r in rows if r["environment"] == env})
         random.Random(f"{seed}:{env}").shuffle(scenarios)
@@ -150,6 +153,15 @@ class Job:
 
 def run_job(data: Data, job: Job) -> tuple[Job, Metrics, Metrics]:
     """Fit one probe; return metrics on the test split and on its minimal-pair subset."""
+    y_te, pred, proba, minimal = predict_job(data, job)
+    n_classes = 2 if job.setup == "binary" else 3
+    full = score(y_te, pred, proba, n_classes)
+    sub = score(y_te[minimal], pred[minimal], proba[minimal], n_classes) if minimal.sum() > 1 else {}
+    return job, full, sub
+
+
+def predict_job(data: Data, job: Job) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    """Fit one probe; return test labels, predictions, probabilities and the minimal-pair mask."""
     rows = data.rows
     split = scenario_split(rows, job.seed)
     train_idx = np.concatenate([split.train, split.val])
@@ -170,14 +182,49 @@ def run_job(data: Data, job: Job) -> tuple[Job, Metrics, Metrics]:
     x_tr = np.asarray(states[tr, job.layer], dtype=np.float32)
     x_te = np.asarray(states[te, job.layer], dtype=np.float32)
     pred, proba = fit_predict(x_tr, y_tr, x_te, n_classes)
-    minimal = np.array([rows[i]["pair_group"] is not None for i in te])
-    full = score(y_te, pred, proba, n_classes)
-    sub = score(y_te[minimal], pred[minimal], proba[minimal], n_classes) if minimal.sum() > 1 else {}
-    return job, full, sub
+    minimal = np.array([rows[i]["pair_group"] is not None for i in te], dtype=bool)
+    return y_te, pred, proba, minimal
+
+
+def confidence_intervals(data: Data, layer: int) -> dict[str, dict[str, float]]:
+    """95% bootstrap CIs (1,000 resamples, seed-0 test split) at the selected layer and at layer 0."""
+    out: dict[str, dict[str, float]] = {}
+    for job in jobs_for(data):
+        if job.seed != 0 or job.layer not in (0, layer):
+            continue
+        y, pred, _, minimal = predict_job(data, job)
+        key = f"{job.name}|{job.train_env}->{job.test_env}|{job.setup}|{job.position}|h{job.horizon or 3}|layer{job.layer}"
+        entry = {"balanced_accuracy": float(balanced_accuracy_score(y, pred)), "n_test": float(len(y))}
+        entry["ci_low"], entry["ci_high"] = bootstrap_ci(lambda i: float(balanced_accuracy_score(y[i], pred[i])), len(y))
+        if minimal.sum() > 1:
+            ym, pm = y[minimal], pred[minimal]
+            entry["minimal_balanced_accuracy"] = float(balanced_accuracy_score(ym, pm))
+            entry["minimal_n_test"] = float(len(ym))
+            entry["minimal_ci_low"], entry["minimal_ci_high"] = bootstrap_ci(lambda i: float(balanced_accuracy_score(ym[i], pm[i])), len(ym))
+        out[key] = entry
+    for env in ("sandbox", "scienceworld", "all"):
+        for setup in ("binary", "three"):
+            y, pred, _, minimal, majority = lexical_predictions(data.rows, env, setup, 0)
+            for name, guess, mask in (("lexical", pred, np.ones(len(y), dtype=bool)), ("lexical_minimal", pred, minimal),
+                                      ("majority", majority, np.ones(len(y), dtype=bool))):
+                yy, gg = y[mask], guess[mask]
+                low, high = bootstrap_ci(lambda i: float(balanced_accuracy_score(yy[i], gg[i])), len(yy))
+                out[f"{name}|{env}|{setup}"] = {"balanced_accuracy": float(balanced_accuracy_score(yy, gg)),
+                                                "n_test": float(len(yy)), "ci_low": low, "ci_high": high}
+    return out
 
 
 def lexical_baseline(rows: list[Pair], env: Env, setup: Setup, seed: int) -> tuple[Metrics, Metrics, Metrics]:
     """Bag-of-words on the action text only; returns (test, minimal-pair test, majority)."""
+    y_te, pred, proba, minimal, majority = lexical_predictions(rows, env, setup, seed)
+    n_classes = 2 if setup == "binary" else 3
+    return (score(y_te, pred, proba, n_classes),
+            score(y_te[minimal], pred[minimal], proba[minimal], n_classes) if minimal.sum() > 1 else {},
+            score(y_te, majority, np.eye(n_classes)[majority], n_classes))
+
+
+def lexical_predictions(rows: list[Pair], env: Env, setup: Setup, seed: int) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    """Lexical-baseline test labels, predictions, probabilities, minimal-pair mask and majority-class predictions."""
     split = scenario_split(rows, seed)
     tr, y_tr = labels_of(rows, env_mask(rows, np.concatenate([split.train, split.val]), env), setup)
     te, y_te = labels_of(rows, env_mask(rows, split.test, env), setup)
@@ -189,12 +236,9 @@ def lexical_baseline(rows: list[Pair], env: Env, setup: Setup, seed: int) -> tup
     proba = np.zeros((len(te), n_classes))
     proba[:, model.classes_] = model.predict_proba(x_te)
     pred = proba.argmax(axis=1)
-    minimal = np.array([rows[i]["pair_group"] is not None for i in te])
+    minimal = np.array([rows[i]["pair_group"] is not None for i in te], dtype=bool)
     majority = np.full(len(y_te), np.bincount(y_tr, minlength=n_classes).argmax())
-    onehot = np.eye(n_classes)[majority]
-    return (score(y_te, pred, proba, n_classes),
-            score(y_te[minimal], pred[minimal], proba[minimal], n_classes) if minimal.sum() > 1 else {},
-            score(y_te, majority, onehot, n_classes))
+    return y_te, pred, proba, minimal, majority
 
 
 def jobs_for(data: Data) -> list[Job]:
@@ -203,7 +247,7 @@ def jobs_for(data: Data) -> list[Job]:
     for seed in SEEDS:
         for layer in range(data.n_layers):
             for env in envs + (["all"] if len(envs) > 1 else []):
-                for setup in ("binary", "three"):
+                for setup in SETUPS:
                     jobs.append(Job("main", env, env, setup, "last", "probe", seed, layer))
                     if env != "all":
                         jobs.append(Job("token_mean", env, env, setup, "mean", "probe", seed, layer))
@@ -211,12 +255,12 @@ def jobs_for(data: Data) -> list[Job]:
                         jobs.append(Job("control", env, env, setup, "last", "control", seed, layer))
                         jobs.append(Job("minimal_only", env, env, setup, "last", "probe", seed, layer, minimal_only_train=True))
             if len(envs) > 1:
-                for setup in ("binary", "three"):
+                for setup in SETUPS:
                     jobs.append(Job("transfer", "sandbox", "scienceworld", setup, "last", "probe", seed, layer))
                     jobs.append(Job("transfer", "scienceworld", "sandbox", setup, "last", "probe", seed, layer))
             if "scienceworld" in envs:
                 for horizon in (1, 2):  # horizon 3 is the main run
-                    for setup in ("binary", "three"):
+                    for setup in SETUPS:
                         jobs.append(Job("horizon", "scienceworld", "scienceworld", setup, "last", "probe", seed, layer, horizon=horizon))
     return jobs
 
@@ -312,7 +356,7 @@ def stated_comparison(data: Data, stated_path: Path, layer: int) -> dict[str, fl
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Probes, controls, ablations and steering direction.")
-    parser.add_argument("command", choices=("all", "select-layer"))
+    parser.add_argument("command", choices=("all", "select-layer", "ci", "stated"))
     parser.add_argument("--pairs", type=Path, default=Path("data/pairs.jsonl"))
     parser.add_argument("--hidden", type=Path, required=True)
     parser.add_argument("--out", type=Path, required=True)
@@ -322,11 +366,26 @@ def main() -> None:
     data = load_data(args.pairs, args.hidden)
     args.out.mkdir(parents=True, exist_ok=True)
 
-    layer, val_curve = select_layer(data)
-    steering_direction(data, layer, args.out)
-    (args.out / "best_layer.json").write_text(json.dumps({"hidden_index": layer, "validation_balanced_accuracy": val_curve,
-                                                          "rule": "max mean val binary balanced accuracy, sandbox, layers 1..L-2"}, indent=2))
-    print(f"best layer {layer}")
+    if args.command in ("ci", "stated"):  # recompute only what depends on the selected layer
+        layer = int(json.loads((args.out / "best_layer.json").read_text())["hidden_index"])
+        if args.command == "ci":
+            (args.out / "ci.json").write_text(json.dumps(confidence_intervals(data, layer), indent=1))
+        elif args.stated is not None:
+            (args.out / "stated_vs_probe.json").write_text(json.dumps(stated_comparison(data, args.stated, layer), indent=1))
+        print(f"{args.command}: layer {layer}, written to {args.out}")
+        return
+    best_path = args.out / "best_layer.json"
+    if best_path.exists():
+        # The layer and steering direction are chosen once (the GPU queue's select-layer job) and never
+        # recomputed: near-tied layers can flip on other hardware, and steering runs read these files.
+        layer = int(json.loads(best_path.read_text())["hidden_index"])
+        print(f"best layer {layer} (existing selection kept)")
+    else:
+        layer, val_curve = select_layer(data)
+        steering_direction(data, layer, args.out)
+        best_path.write_text(json.dumps({"hidden_index": layer, "validation_balanced_accuracy": val_curve,
+                                         "rule": "max mean val binary balanced accuracy, sandbox, layers 1..L-2"}, indent=2))
+        print(f"best layer {layer}")
     if args.command == "select-layer":
         return
 
